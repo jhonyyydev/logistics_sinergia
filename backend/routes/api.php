@@ -11,6 +11,8 @@ Route::prefix('auth/role')->group(base_path('src/auth/role/infrastructure/routes
 
 Route::prefix('auth/user')->group(base_path('src/auth/user/infrastructure/routes/api.php'));
 
+Route::prefix('auth/permission')->group(base_path('src/auth/permission/infrastructure/routes/api.php'));
+
 Route::prefix('catalog/client')->group(base_path('src/catalog/client/infrastructure/routes/api.php'));
 
 Route::prefix('catalog/destination')->group(base_path('src/catalog/destination/infrastructure/routes/api.php'));
@@ -26,3 +28,4 @@ Route::prefix('logistics/guide')->group(base_path('src/logistics/guide/infrastru
 Route::prefix('logistics/pricing')->group(base_path('src/logistics/pricing/infrastructure/routes/api.php'));
 
 Route::prefix('logistics/transport_delivery')->group(base_path('src/logistics/transport_delivery/infrastructure/routes/api.php'));
+
