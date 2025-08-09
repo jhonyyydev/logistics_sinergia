@@ -2,29 +2,31 @@
 
 namespace Src\Auth\User\Domain\Entities;
 
-Use Src\Auth\User\Domain\ValueObjects\UserName;
-Use Src\Auth\User\Domain\ValueObjects\UserEmail;
+use Src\Auth\User\Domain\ValueObjects\UserId;
+use Src\Auth\User\Domain\ValueObjects\UserName;
+use Src\Auth\User\Domain\ValueObjects\UserEmail;
+use Src\Auth\User\Domain\ValueObjects\UserPassword;
+use Src\Auth\User\Domain\ValueObjects\UserAddress;
+use Src\Auth\User\Domain\ValueObjects\UserPhone;
+use Src\Auth\User\Domain\ValueObjects\UserType;
 
-class User {
-    private int $id;
-    private UserName $name;
-    private UserEmail $email;
+final class User
+{
+    public function __construct(
+        private UserId $id,
+        private UserName $name,
+        private UserEmail $email,
+        private UserPassword $password,
+        private UserAddress $address,
+        private UserPhone $phone,
+        private UserType $type
+    ) {}
 
-    public function __construct(int $id, UserName $name, UserEmail $email) {
-        $this->name = $name;
-        $this->email = $email;
-    }
-
-    public function name (): UserName {
-        return $this->name;
-    }
-
-    public function email (): UserEmail {
-        return $this->email;
-    }
-
-    public function id(): int {
-        return $this->id;
-    }
-
+    public function id(): UserId { return $this->id; }
+    public function name(): UserName { return $this->name; }
+    public function email(): UserEmail { return $this->email; }
+    public function password(): UserPassword { return $this->password; }
+    public function address(): UserAddress { return $this->address; }
+    public function phone(): UserPhone { return $this->phone; }
+    public function type(): UserType { return $this->type; }
 }
