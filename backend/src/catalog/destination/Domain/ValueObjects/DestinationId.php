@@ -2,15 +2,32 @@
 
 namespace Src\Catalog\Destination\Domain\ValueObjects;
 
+use InvalidArgumentException;
+
 class DestinationId
 {
     private int $value;
 
-    public function __construct(int $value)
+    public function __construct(mixed $value)
     {
-        if ($value <= 0) {
-            throw new \InvalidArgumentException("Destination ID must be positive");
+        if (!is_numeric($value)) {
+            throw new InvalidArgumentException("Destination ID must be a number");
         }
+
+        if (intval($value) != $value) {
+            throw new InvalidArgumentException("Destination ID must be an integer");
+        }
+
+        $value = intval($value);
+
+        if ($value <= 0) {
+            throw new InvalidArgumentException("Destination ID must be positive");
+        }
+
+        if ($value > PHP_INT_MAX) {
+            throw new InvalidArgumentException("Destination ID is too large");
+        }
+
         $this->value = $value;
     }
 
@@ -18,4 +35,5 @@ class DestinationId
     {
         return $this->value;
     }
+
 }

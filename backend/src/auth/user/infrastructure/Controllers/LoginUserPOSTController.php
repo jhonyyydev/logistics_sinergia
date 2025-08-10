@@ -28,13 +28,11 @@ final class LoginUserPOSTController extends Controller
             ], 200);
 
         } catch (DomainException $e) {
-            // Errores esperados del negocio (credenciales inválidas, usuario inactivo, etc.)
             return response()->json([
                 'error' => $e->getMessage()
             ], 401);
 
         } catch (Throwable $e) {
-            // Errores inesperados (BD caída, bugs, etc.)
             return response()->json([
                 'error' => 'Unexpected error. Please try again later.'
             ], 500);

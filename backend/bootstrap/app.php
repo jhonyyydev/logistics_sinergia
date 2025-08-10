@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'validate.client.id' => \App\Http\Middleware\ValidateClientId::class,
+            'validate.destination.id' => \App\Http\Middleware\ValidateDestinationId::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
@@ -57,6 +59,15 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'message' => $message
                 ], 400);
+            }
+        });
+
+        $exceptions->render(function (ValidationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors()
+                ], 422);
             }
         });
 
