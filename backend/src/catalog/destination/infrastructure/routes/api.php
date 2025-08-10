@@ -1,9 +1,24 @@
 <?php
 
-//use Src\catalog\destination\infrastructure\controllers\ExampleGETController;
+use Illuminate\Support\Facades\Route;
+use Src\Catalog\Destination\Infrastructure\Controllers\CreateDestinationPOSTController;
+use Src\Catalog\Destination\Infrastructure\Controllers\GetAllDestinationsGETController;
+use Src\Catalog\Destination\Infrastructure\Controllers\FindDestinationByIdGETController;
+use Src\Catalog\Destination\Infrastructure\Controllers\UpdateDestinationPUTController;
+use Src\Catalog\Destination\Infrastructure\Controllers\DeleteDestinationDELETEController;
 
-// Simpele route example
-// Route::get('/', [ExampleGETController::class, 'index']);
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
-//Authenticathed route example
-// Route::middleware(['auth:sanctum','activitylog'])->get('/', [ExampleGETController::class, 'index']);
+    Route::get('/list', GetAllDestinationsGETController::class);
+
+    Route::post('/', CreateDestinationPOSTController::class);
+
+    Route::get('/{id}', FindDestinationByIdGETController::class)
+        ->middleware('validate.destination.id');
+
+    Route::put('/{id}', UpdateDestinationPUTController::class)
+        ->middleware('validate.destination.id');
+
+    Route::delete('/{id}', DeleteDestinationDELETEController::class)
+        ->middleware('validate.destination.id');
+});
