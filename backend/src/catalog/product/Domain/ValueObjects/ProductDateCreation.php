@@ -8,9 +8,14 @@ class ProductDateCreation
 {
     private DateTime $value;
 
-    public function __construct(string $date)
+    public function __construct($date)
     {
-        $parsed = DateTime::createFromFormat('Y-m-d', $date);
+        if ($date instanceof \DateTime) {
+            $this->value = $date;
+            return;
+        }
+
+        $parsed = \DateTime::createFromFormat('Y-m-d', $date);
         if (!$parsed) {
             throw new \InvalidArgumentException("Invalid product creation date format. Expected Y-m-d");
         }

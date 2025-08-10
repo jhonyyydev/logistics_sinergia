@@ -23,6 +23,11 @@ use Src\Catalog\Client\Infrastructure\Repositories\EloquentClientRepository;
 use Src\Catalog\Destination\Domain\Contracts\DestinationRepositoryInterface;
 use Src\Catalog\Destination\Infrastructure\Repositories\EloquentDestinationRepository;
 
+use Src\Catalog\Product\Domain\Contracts\ProductRepositoryInterface;
+use Src\Catalog\Product\Infrastructure\Repositories\EloquentProductRepository;
+use Src\Shared\Domain\Contracts\ProductIdGeneratorInterface;
+use Src\Shared\Infrastructure\SequentialProductIdGenerator;
+
 class DomainBindingsServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -31,6 +36,7 @@ class DomainBindingsServiceProvider extends ServiceProvider
         $this->app->bind(RoleRepositoryInterface::class, SpatieRoleRepository::class);
         $this->app->bind(IdGeneratorInterface::class, SequentialIdGenerator::class);
         $this->app->bind(DestinationIdGeneratorInterface::class, SequentialDestinationIdGenerator::class);
+        $this->app->bind(ProductIdGeneratorInterface::class, SequentialProductIdGenerator::class);
         $this->app->bind(PasswordHasherInterface::class, LaravelPasswordHasher::class);
         $this->app->bind(AuthServiceInterface::class, LaravelAuthService::class);
 
@@ -44,6 +50,12 @@ class DomainBindingsServiceProvider extends ServiceProvider
         $this->app->bind(
             DestinationRepositoryInterface::class,
             EloquentDestinationRepository::class
+        );
+
+        // Product bindings
+        $this->app->bind(
+            ProductRepositoryInterface::class,
+            EloquentProductRepository::class
         );
     }
 

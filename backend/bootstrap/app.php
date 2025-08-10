@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'validate.client.id' => \App\Http\Middleware\ValidateClientId::class,
             'validate.destination.id' => \App\Http\Middleware\ValidateDestinationId::class,
+            'validate.product.id' => \App\Http\Middleware\ValidateProductId::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
