@@ -62,4 +62,5 @@ final class EloquentUserRepository implements UserRepositoryInterface
             new \Src\Auth\User\Domain\ValueObjects\UserType($user->type)
         );
     }
+
 }
