@@ -13,34 +13,20 @@ class UserSeeder extends Seeder
     {
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
-        $admins = [
-            [
-                'name' => 'Jhonatan Veloza',
-                'email' => 'jhonatan@example.com',
-                'password' => Hash::make('password123'),
-            ],
-            [
-                'name' => 'Owen Moreno',
-                'email' => 'owen@example.com',
-                'password' => Hash::make('password123'),
-            ],
-            [
-                'name' => 'Felipe Perez',
-                'email' => 'felipe@example.com',
-                'password' => Hash::make('password123'),
-            ],
+        $adminData = [
+            'name'     => 'Jhonatan Veloza',
+            'email'    => 'jhonatan@example.com',
+            'password' => Hash::make('password123'),
+            'address'  => '123 Main Street, Bogotá',
+            'phone'    => '+57 300 123 4567',
+            'type'     => 'national'
         ];
 
-        foreach ($admins as $adminData) {
-            $user = User::firstOrCreate(
-                ['email' => $adminData['email']],
-                [
-                    'name' => $adminData['name'],
-                    'password' => $adminData['password'],
-                ]
-            );
+        $user = User::updateOrCreate(
+            ['email' => $adminData['email']],
+            $adminData
+        );
 
-            $user->assignRole($adminRole);
-        }
+        $user->assignRole($adminRole);
     }
 }

@@ -1,9 +1,20 @@
 <?php
 
-//use Src\catalog\client\infrastructure\controllers\ExampleGETController;
+use Illuminate\Support\Facades\Route;
+use Src\Catalog\Client\Infrastructure\Controllers\GetAllClientsGETController;
+use Src\Catalog\Client\Infrastructure\Controllers\FindClientByIdGETController;
+use Src\Catalog\Client\Infrastructure\Controllers\UpdateClientPUTController;
+use Src\Catalog\Client\Infrastructure\Controllers\DeactivateClientDELETEController;
 
-// Simpele route example
-// Route::get('/', [ExampleGETController::class, 'index']);
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::get('/list', GetAllClientsGETController::class);
 
-//Authenticathed route example
-// Route::middleware(['auth:sanctum','activitylog'])->get('/', [ExampleGETController::class, 'index']);
+    Route::get('/{id}', FindClientByIdGETController::class)
+        ->middleware('validate.client.id');
+
+    Route::put('/{id}', UpdateClientPUTController::class)
+        ->middleware('validate.client.id');
+
+    Route::delete('/{id}', DeactivateClientDELETEController::class)
+        ->middleware('validate.client.id');
+});

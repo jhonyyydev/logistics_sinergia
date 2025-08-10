@@ -8,9 +8,9 @@ class ClientType
 
     public function __construct(string $value)
     {
-        $allowed = ['nacional', 'internacional'];
+        $allowed = ['national', 'international'];
         if (!in_array(strtolower($value), $allowed, true)) {
-            throw new \InvalidArgumentException("Invalid client type: must be 'nacional' or 'internacional'");
+            throw new \InvalidArgumentException("Invalid client type: must be 'national' or 'internacional'");
         }
         $this->value = strtolower($value);
     }

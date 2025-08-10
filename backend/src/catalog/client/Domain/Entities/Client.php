@@ -21,9 +21,9 @@ class Client {
     public function __construct(
         ClientId $id,
         ClientName $fullName,
+        ClientEmail $email,
         ClientAddress $address,
         ClientPhone $phone,
-        ClientEmail $email,
         ClientType $type,
         bool $active = true
     ) {
