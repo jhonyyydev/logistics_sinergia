@@ -2,44 +2,43 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
+    "isolatedModules": true,
     "esModuleInterop": true,
-    "sourceMap": true,
-    "declaration": false,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
     "paths": {
+      "@spartan-ng/helm/select": [
+        "./libs/ui/ui-select-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/button": [
+        "./libs/ui/ui-button-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/icon": [
+        "./libs/ui/ui-icon-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/checkbox": [
+        "./libs/ui/ui-checkbox-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/label": [
+        "./libs/ui/ui-label-helm/src/index.ts"
+      ],
       "@spartan-ng/helm/input": [
         "./libs/ui/ui-input-helm/src/index.ts"
-      ],
-      "@spartan-ng/helm/alert": [
-        "./libs/ui/ui-alert-helm/src/index.ts"
-      ],
-      "@spartan-ng/helm/avatar": [
-        "./libs/ui/ui-avatar-helm/src/index.ts"
-      ],
-      "@spartan-ng/helm/calendar": [
-        "./libs/ui/ui-calendar-helm/src/index.ts"
       ],
       "@spartan-ng/helm/card": [
         "./libs/ui/ui-card-helm/src/index.ts"
       ],
-      "@spartan-ng/helm/select": [
-        "./libs/ui/ui-select-helm/src/index.ts"
+      "@spartan-ng/helm/command": [
+        "./libs/ui/ui-command-helm/src/index.ts"
       ]
     }
   },
