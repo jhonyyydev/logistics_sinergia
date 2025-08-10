@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'validate.client.id' => \App\Http\Middleware\ValidateClientId::class,
             'validate.destination.id' => \App\Http\Middleware\ValidateDestinationId::class,
             'validate.product.id' => \App\Http\Middleware\ValidateProductId::class,
+            'validate.transport.id' => \App\Http\Middleware\ValidateTransportUnitId::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

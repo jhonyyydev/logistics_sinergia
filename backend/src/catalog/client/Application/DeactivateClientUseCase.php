@@ -11,8 +11,18 @@ final class DeactivateClientUseCase
         private ClientRepositoryInterface $repository
     ) {}
 
-    public function execute(ClientId $id): void
+    public function execute(int $id): void
     {
-        $this->repository->deactivate($id);
+        $clientId = new ClientId($id);
+
+        $client = $this->repository->findById($clientId);
+
+        if (!$client) {
+            throw new \InvalidArgumentException("Client not found");
+        }
+
+        $client->toggleActive();
+
+        $this->repository->update($client);
     }
 }

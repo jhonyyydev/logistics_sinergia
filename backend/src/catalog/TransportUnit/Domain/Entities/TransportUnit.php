@@ -46,8 +46,8 @@ final class TransportUnit
         return $this->active;
     }
 
-    public function deactivate(): void
+    public function toggleActive(): void
     {
-        $this->active = new TransportUnitActive(false);
+        $this->active = new TransportUnitActive(!$this->active->value());
     }
 }

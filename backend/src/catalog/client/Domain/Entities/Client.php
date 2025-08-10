@@ -44,8 +44,9 @@ class Client {
     public function type(): ClientType { return $this->type; }
     public function isActive(): bool { return $this->active; }
 
-    public function deactivate(): void
+    public function toggleActive(): void
     {
-        $this->active = false;
+        $this->active = !$this->active;
     }
+
 }

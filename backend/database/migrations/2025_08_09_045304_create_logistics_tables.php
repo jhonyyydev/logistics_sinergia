@@ -50,6 +50,7 @@ return new class extends Migration
             $table->id();
             $table->string('identifier')->unique();
             $table->string('unit_type', 50);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
 

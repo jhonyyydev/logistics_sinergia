@@ -18,7 +18,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::prefix('catalog/client')->group(base_path('src/catalog/client/infrastructure/routes/api.php'));
     Route::prefix('catalog/destination')->group(base_path('src/catalog/destination/infrastructure/routes/api.php'));
     Route::prefix('catalog/product')->group(base_path('src/catalog/product/infrastructure/routes/api.php'));
-    Route::prefix('catalog/transport_unit')->group(base_path('src/catalog/transportunit/infrastructure/routes/api.php'));
+    Route::prefix('catalog/transport/')->group(base_path('src/catalog/transportunit/infrastructure/routes/api.php'));
 });
 
 // Logistics - Admin o Client con permiso

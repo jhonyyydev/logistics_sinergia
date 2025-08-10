@@ -4,14 +4,14 @@ namespace App\Http\Middleware;
 
 use Closure;
 use InvalidArgumentException;
-use Src\Catalog\Product\Domain\ValueObjects\ProductId as ValueObjectsProductId;
+use Src\Catalog\TransportUnit\Domain\ValueObjects\TransportUnitId as ValueObjectsTransportUnitId;
 
-class ValidateProductId
+class ValidateTransportUnitId
 {
     public function handle($request, Closure $next)
     {
         try {
-            new ValueObjectsProductId($request->route('id'));
+            new ValueObjectsTransportUnitId($request->route('id'));
         } catch (InvalidArgumentException $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }

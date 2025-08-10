@@ -1,15 +1,15 @@
 <?php
 
-namespace Src\Catalog\Client\Infrastructure\Controllers;
+namespace Src\Catalog\TransportUnit\Infrastructure\Controllers;
 
 use App\Http\Controllers\Controller;
-use Src\Catalog\Client\Application\DeactivateClientUseCase;
+use Src\Catalog\TransportUnit\Application\DeactivateTransportUnitUseCase;
 use Throwable;
 
-final class DeactivateClientDELETEController extends Controller
+final class DeactivateTransportUnitDELETEController extends Controller
 {
     public function __construct(
-        private DeactivateClientUseCase $useCase
+        private DeactivateTransportUnitUseCase $useCase
     ) {}
 
     public function __invoke($id)
@@ -17,7 +17,7 @@ final class DeactivateClientDELETEController extends Controller
         try {
             $this->useCase->execute((int)$id);
 
-            return response()->json(['message' => 'Client status successfully changed'], 200);
+            return response()->json(['message' => 'Transport unit status successfully changed'], 200);
 
         } catch (Throwable $e) {
             return response()->json([
@@ -26,4 +26,3 @@ final class DeactivateClientDELETEController extends Controller
         }
     }
 }
-

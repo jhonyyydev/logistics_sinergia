@@ -11,6 +11,8 @@ use Src\Shared\Domain\Contracts\IdGeneratorInterface;
 use Src\Shared\Infrastructure\SequentialIdGenerator;
 use Src\Shared\Domain\Contracts\DestinationIdGeneratorInterface;
 use Src\Shared\Infrastructure\SequentialDestinationIdGenerator;
+use Src\Shared\Infrastructure\SequentialProductIdGenerator;
+use Src\Shared\Infrastructure\SequentialTransportUnitIdGenerator;
 
 use Src\Shared\Domain\Contracts\PasswordHasherInterface;
 use Src\Shared\Infrastructure\LaravelPasswordHasher;
@@ -26,7 +28,10 @@ use Src\Catalog\Destination\Infrastructure\Repositories\EloquentDestinationRepos
 use Src\Catalog\Product\Domain\Contracts\ProductRepositoryInterface;
 use Src\Catalog\Product\Infrastructure\Repositories\EloquentProductRepository;
 use Src\Shared\Domain\Contracts\ProductIdGeneratorInterface;
-use Src\Shared\Infrastructure\SequentialProductIdGenerator;
+
+use Src\Catalog\TransportUnit\Domain\Contracts\TransportUnitRepositoryInterface;
+use Src\Catalog\TransportUnit\Infrastructure\Repositories\EloquentTransportUnitRepository;
+use Src\Shared\Domain\Contracts\TransportUnitIdGeneratorInterface;
 
 class DomainBindingsServiceProvider extends ServiceProvider
 {
@@ -37,6 +42,7 @@ class DomainBindingsServiceProvider extends ServiceProvider
         $this->app->bind(IdGeneratorInterface::class, SequentialIdGenerator::class);
         $this->app->bind(DestinationIdGeneratorInterface::class, SequentialDestinationIdGenerator::class);
         $this->app->bind(ProductIdGeneratorInterface::class, SequentialProductIdGenerator::class);
+        $this->app->bind(TransportUnitIdGeneratorInterface::class, SequentialTransportUnitIdGenerator::class);
         $this->app->bind(PasswordHasherInterface::class, LaravelPasswordHasher::class);
         $this->app->bind(AuthServiceInterface::class, LaravelAuthService::class);
 
@@ -56,6 +62,12 @@ class DomainBindingsServiceProvider extends ServiceProvider
         $this->app->bind(
             ProductRepositoryInterface::class,
             EloquentProductRepository::class
+        );
+
+        // Transpor Unit bindings
+        $this->app->bind(
+            TransportUnitRepositoryInterface::class,
+            EloquentTransportUnitRepository::class
         );
     }
 

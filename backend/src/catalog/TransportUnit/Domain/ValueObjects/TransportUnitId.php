@@ -2,20 +2,37 @@
 
 namespace Src\Catalog\TransportUnit\Domain\ValueObjects;
 
+use InvalidArgumentException;
+
 final class TransportUnitId
 {
-    private int $id;
+    private int $value;
 
-    public function __construct(int $id)
+    public function __construct(mixed $value)
     {
-        if ($id <= 0) {
-            throw new \InvalidArgumentException("Invalid transport unit ID.");
+        if (!is_numeric($value)) {
+            throw new InvalidArgumentException("Destination ID must be a number");
         }
-        $this->id = $id;
+
+        if (intval($value) != $value) {
+            throw new InvalidArgumentException("Destination ID must be an integer");
+        }
+
+        $value = intval($value);
+
+        if ($value <= 0) {
+            throw new InvalidArgumentException("Destination ID must be positive");
+        }
+
+        if ($value > PHP_INT_MAX) {
+            throw new InvalidArgumentException("Destination ID is too large");
+        }
+
+        $this->value = $value;
     }
 
     public function value(): int
     {
-        return $this->id;
+        return $this->value;
     }
 }
