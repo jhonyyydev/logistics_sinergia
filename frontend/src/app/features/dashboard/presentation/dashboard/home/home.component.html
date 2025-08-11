@@ -1,0 +1,73 @@
+<div class="min-h-screen bg-gray-50">
+   Header
+  <header class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-semibold text-gray-900">Dashboard</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-500">
+            {{ currentTime | date:'medium' }}
+          </span>
+          <button
+            hlmBtn
+            variant="outline"
+            size="sm"
+            (click)="logout()"
+            class="text-gray-700 hover:text-gray-900">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   Main Content
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+     Welcome Section
+    <div class="px-4 py-6 sm:px-0">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">
+            Welcome to your Dashboard
+          </h2>
+          <p class="text-gray-600 mb-6">
+            Select a section to manage your business operations.
+          </p>
+
+           Dashboard Grid - Shows only permitted sections
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             Dynamic sections based on permissions
+            <div
+              *ngFor="let section of availableSections"
+              [class]="'rounded-lg p-6 transition-colors cursor-pointer ' + getSectionColorClasses(section.color)"
+              (click)="navigateToSection(section.key)">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div [class]="'w-8 h-8 rounded-md flex items-center justify-center ' + getIconColorClasses(section.color)">
+                    <span class="text-white text-sm font-medium">{{ section.name.charAt(0) }}</span>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <h3 class="text-lg font-medium text-gray-900">{{ section.name }}</h3>
+                  <p class="text-sm text-gray-600">{{ section.description }}</p>
+                </div>
+              </div>
+            </div>
+
+             Message when no sections available
+            <div *ngIf="availableSections.length === 0" class="col-span-full text-center py-8">
+              <p class="text-gray-500">No sections available for your current permissions.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     Router Outlet for nested routes
+    <div class="px-4 sm:px-0">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

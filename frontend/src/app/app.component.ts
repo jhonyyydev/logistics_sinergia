@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HlmInput } from '@spartan-ng/helm/input';
-import { HlmButton } from '@spartan-ng/helm/button';
+import { ToastContainerComponent } from './shared/components/toast/toast-container.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HlmInput, HlmButton],
+  imports: [RouterOutlet,
+    ToastContainerComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
