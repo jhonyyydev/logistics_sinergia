@@ -9,19 +9,19 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 // Rutas públicas (auth)
-Route::prefix('auth/role')->group(base_path('src/auth/role/infrastructure/routes/api.php'));
-Route::prefix('auth/user')->group(base_path('src/auth/user/infrastructure/routes/api.php'));
-Route::prefix('auth/permission')->group(base_path('src/auth/permission/infrastructure/routes/api.php'));
+Route::prefix('auth/role')->group(base_path('src/Auth/Role/Infrastructure/Routes/api.php'));
+Route::prefix('auth/user')->group(base_path('src/Auth/User/Infrastructure/Routes/api.php'));
+Route::prefix('auth/permission')->group(base_path('src/Auth/Permission/Infrastructure/Routes/api.php'));
 
 // Catalog - Solo admin
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::prefix('catalog/client')->group(base_path('src/catalog/client/infrastructure/routes/api.php'));
-    Route::prefix('catalog/destination')->group(base_path('src/catalog/destination/infrastructure/routes/api.php'));
-    Route::prefix('catalog/product')->group(base_path('src/catalog/product/infrastructure/routes/api.php'));
-    Route::prefix('catalog/transport/')->group(base_path('src/catalog/transportunit/infrastructure/routes/api.php'));
+    Route::prefix('catalog/client')->group(base_path('src/Catalog/Client/Infrastructure/Routes/api.php'));
+    Route::prefix('catalog/destination')->group(base_path('src/Catalog/Destination/Infrastructure/Routes/api.php'));
+    Route::prefix('catalog/product')->group(base_path('src/Catalog/Product/Infrastructure/Routes/api.php'));
+    Route::prefix('catalog/transport/')->group(base_path('src/Catalog/TransportUnit/Infrastructure/Routes/api.php'));
 });
 
 // Logistics - Admin o Client con permiso
 Route::middleware(['auth:sanctum', 'permission:manage-deliveries'])->group(function () {
-    Route::prefix('logistics/delivery')->group(base_path('src/logistics/delivery/infrastructure/routes/api.php'));
+    Route::prefix('logistics/delivery')->group(base_path('src/Logistics/Delivery/Infrastructure/Routes/api.php'));
 });
