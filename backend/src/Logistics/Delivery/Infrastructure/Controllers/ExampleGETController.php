@@ -1,12 +1,12 @@
 <?php
 
-namespace Src\logistics\delivery\infrastructure\controllers;
+namespace Src\Logistics\Delivery\Infrastructure\Controllers;
 
 use App\Http\Controllers\Controller;
 
-final class ExampleGETController extends Controller { 
+final class ExampleGETController extends Controller {
 
- public function index() { 
- // TODO: DDD Controller content here 
+ public function index() {
+ // TODO: DDD Controller content here
  }
 }

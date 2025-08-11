@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\logistics\delivery\infrastructure\validators;
+namespace Src\Logistics\Delivery\Infrastructure\Validators;
 
 use Illuminate\Foundation\Http\FormRequest;
 
