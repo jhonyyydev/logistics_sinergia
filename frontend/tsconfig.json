@@ -15,30 +15,37 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
+    "baseUrl": ".",
     "paths": {
+      "@/*": [
+        "src/app/*"
+      ],
       "@spartan-ng/helm/select": [
-        "./libs/ui/ui-select-helm/src/index.ts"
+        "libs/ui/ui-select-helm/src/index.ts"
       ],
       "@spartan-ng/helm/button": [
-        "./libs/ui/ui-button-helm/src/index.ts"
+        "libs/ui/ui-button-helm/src/index.ts"
       ],
       "@spartan-ng/helm/icon": [
-        "./libs/ui/ui-icon-helm/src/index.ts"
+        "libs/ui/ui-icon-helm/src/index.ts"
       ],
       "@spartan-ng/helm/checkbox": [
-        "./libs/ui/ui-checkbox-helm/src/index.ts"
+        "libs/ui/ui-checkbox-helm/src/index.ts"
       ],
       "@spartan-ng/helm/label": [
-        "./libs/ui/ui-label-helm/src/index.ts"
+        "libs/ui/ui-label-helm/src/index.ts"
       ],
       "@spartan-ng/helm/input": [
-        "./libs/ui/ui-input-helm/src/index.ts"
+        "libs/ui/ui-input-helm/src/index.ts"
       ],
       "@spartan-ng/helm/card": [
-        "./libs/ui/ui-card-helm/src/index.ts"
+        "libs/ui/ui-card-helm/src/index.ts"
       ],
       "@spartan-ng/helm/command": [
-        "./libs/ui/ui-command-helm/src/index.ts"
+        "libs/ui/ui-command-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/menu": [
+        "./libs/ui/ui-menu-helm/src/index.ts"
       ]
     }
   },
