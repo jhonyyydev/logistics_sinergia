@@ -1,14 +1,56 @@
-import { Injectable } from '@angular/core';
-import { MENU_CONFIG } from '../config/menu.config';
-import { MenuItem } from '../../features/dashboard/domain/entities/menu-item.entity';
+import { Injectable, inject } from "@angular/core"
+import { AuthTokenService } from "./auth-token.service"
 
-type PermissionKey = keyof typeof MENU_CONFIG;
+export interface UserPermissions {
+  canViewClients: boolean
+  canEditClients: boolean
+  canViewProducts: boolean
+  canEditProducts: boolean
+  canViewDeliveries: boolean
+  canEditDeliveries: boolean
+  canViewDestinations: boolean
+  canEditDestinations: boolean
+  canViewTransportUnits: boolean
+  canEditTransportUnits: boolean
+}
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: "root",
+})
 export class PermissionsService {
-  getMenuFromPermissions(permissions: string[]): MenuItem[] {
-    return permissions
-      .filter((p): p is PermissionKey => p in MENU_CONFIG)
-      .map(p => MENU_CONFIG[p]);
+  private readonly tokenService = inject(AuthTokenService)
+
+  getUserPermissions(): UserPermissions {
+    const token = this.tokenService.getToken()
+    if (!token) {
+      return this.getDefaultPermissions()
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]))
+      return payload.permissions || this.getDefaultPermissions()
+    } catch {
+      return this.getDefaultPermissions()
+    }
+  }
+
+  private getDefaultPermissions(): UserPermissions {
+    return {
+      canViewClients: true,
+      canEditClients: false,
+      canViewProducts: true,
+      canEditProducts: false,
+      canViewDeliveries: true,
+      canEditDeliveries: false,
+      canViewDestinations: true,
+      canEditDestinations: false,
+      canViewTransportUnits: true,
+      canEditTransportUnits: false,
+    }
+  }
+
+  hasPermission(permission: keyof UserPermissions): boolean {
+    const permissions = this.getUserPermissions()
+    return permissions[permission]
   }
 }

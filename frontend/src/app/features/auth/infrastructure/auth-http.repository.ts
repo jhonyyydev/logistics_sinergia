@@ -1,26 +1,44 @@
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpService } from '@/core/services/http.service';
+import { inject, Injectable } from "@angular/core"
+import type { Observable } from "rxjs"
+import { HttpService } from "@/core/services/http.service"
 
-interface LoginRequest { email: string; password: string; }
-interface LoginResponse { token: string; }
-
-export interface RegisterRequest {
-  name: string;
-  email: string;
-  password: string;
-  role: 'client' | 'admin';
+interface LoginRequest {
+  email: string
+  password: string
 }
 
-@Injectable({ providedIn: 'root' })
+interface LoginResponse {
+  token: string
+}
+
+export interface RegisterRequest {
+  name: string
+  email: string
+  address: string
+  phone: string
+  type: "national" | "international"
+  password: string
+}
+
+export interface RegisterResponse {
+  message: string
+  user: {
+    id: string
+    name: string
+    email: string
+    type: string
+  }
+}
+
+@Injectable({ providedIn: "root" })
 export class AuthHttpRepository {
-  private readonly http = inject(HttpService);
+  private readonly http = inject(HttpService)
 
   login(data: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('login', data);
+    return this.http.post<LoginResponse>("auth/user/login", data)
   }
 
-  register(data: RegisterRequest): Observable<void> {
-    return this.http.post<void>('register', data);
+  register(data: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>("auth/user/register", data)
   }
 }

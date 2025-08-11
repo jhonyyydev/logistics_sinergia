@@ -1,30 +1,59 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from "@angular/core"
+import { Router } from "@angular/router"
+import { AuthTokenService } from "./auth-token.service"
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: "root",
+})
 export class AuthService {
-  private tokenKey = 'auth_token';
-  private permissionsKey = 'user_permissions';
+  private readonly tokenService = inject(AuthTokenService)
+  private readonly router = inject(Router)
 
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem(this.tokenKey);
-  }
-
-  login(token: string, permissions: string[]): void {
-    localStorage.setItem(this.tokenKey, token);
-    localStorage.setItem(this.permissionsKey, JSON.stringify(permissions));
+  login(token: string, permissions: string[] = []): void {
+    this.tokenService.setToken(token)
+    localStorage.setItem("user_permissions", JSON.stringify(permissions))
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.permissionsKey);
+    this.tokenService.removeToken()
+    localStorage.removeItem("user_permissions")
+    this.router.navigateByUrl("/auth/login")
+  }
+
+  isAuthenticated(): boolean {
+    return this.tokenService.isAuthenticated()
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return this.tokenService.getToken()
   }
 
   getUserPermissions(): string[] {
-    const perms = localStorage.getItem(this.permissionsKey);
-    return perms ? JSON.parse(perms) : [];
+    const permissions = localStorage.getItem("user_permissions")
+    return permissions ? JSON.parse(permissions) : []
+  }
+
+  hasPermission(permission: string): boolean {
+    return this.getUserPermissions().includes(permission)
+  }
+
+  hasAnyPermission(permissions: string[]): boolean {
+    const userPermissions = this.getUserPermissions()
+    return permissions.some((permission) => userPermissions.includes(permission))
+  }
+
+  isAdmin(): boolean {
+    const permissions = this.getUserPermissions()
+    return (
+      permissions.includes("manage-clients") &&
+      permissions.includes("manage-products") &&
+      permissions.includes("manage-destinations") &&
+      permissions.includes("manage-transport-units")
+    )
+  }
+
+  isClient(): boolean {
+    const permissions = this.getUserPermissions()
+    return permissions.includes("manage-deliveries") && permissions.length === 1
   }
 }

@@ -17,14 +17,15 @@ final class LoginUserPOSTController extends Controller
     public function __invoke(LoginUserRequest $request)
     {
         try {
-            $token = $this->useCase->execute(
+            $result = $this->useCase->execute(
                 $request->email,
                 $request->password
             );
 
             return response()->json([
                 'message' => 'Login successful',
-                'token'   => $token
+                'token'   => $result['token'],
+                'user'    => $result['user']
             ], 200);
 
         } catch (DomainException $e) {
