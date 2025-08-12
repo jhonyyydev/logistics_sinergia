@@ -61,33 +61,3 @@ export interface DestinationSelect {
   destination_type: 'seaport' | 'warehouse_land'
 }
 
-// Enum para los tipos de producto
-export const PRODUCT_TYPES = {
-  ELECTRONICS: 'electronics' as ProductType,
-  CLOTHING: 'clothing' as ProductType,
-  FOOD: 'food' as ProductType,
-  FURNITURE: 'furniture' as ProductType,
-  BOOKS: 'books' as ProductType,
-  TOYS: 'toys' as ProductType
-} as const
-
-// Enum para los tipos de delivery
-export const DELIVERY_TYPES = {
-  MARITIME: 'maritime' as DeliveryType,
-  TERRESTRIAL: 'terrestrial' as DeliveryType
-} as const
-
-// Labels para mostrar en UI
-export const PRODUCT_TYPE_LABELS = {
-  electronics: 'Electrónicos',
-  clothing: 'Ropa',
-  food: 'Alimentos',
-  furniture: 'Muebles',
-  books: 'Libros',
-  toys: 'Juguetes'
-} as const
-
-export const DELIVERY_TYPE_LABELS = {
-  maritime: 'Marítimo',
-  terrestrial: 'Terrestre'
-} as const

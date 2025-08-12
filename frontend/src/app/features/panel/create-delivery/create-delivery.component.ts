@@ -12,11 +12,6 @@ import type {
   ProductType,
   DeliveryType
 } from '@/core/models/delivery-form.model'
-import {
-  PRODUCT_TYPES,
-  PRODUCT_TYPE_LABELS,
-  DELIVERY_TYPE_LABELS
-} from '@/core/models/delivery-form.model'
 
 @Component({
   selector: 'app-create-delivery',
@@ -39,9 +34,7 @@ export class CreateDeliveryComponent implements OnInit {
   transportUnits: TransportUnitSelect[] = []
   destinations: DestinationSelect[] = []
 
-  // Opciones para product_type
-  productTypes = Object.values(PRODUCT_TYPES)
-  productTypeLabels = PRODUCT_TYPE_LABELS
+  productTypes = ['electronics', 'clothing', 'food', 'furniture', 'books', 'toys'] as const
 
   // Producto seleccionado
   selectedProduct: ProductSelect | null = null
@@ -84,7 +77,6 @@ export class CreateDeliveryComponent implements OnInit {
         this.isLoading = false
       },
       error: (err) => {
-        console.error('Error cargando datos:', err)
         this.error = 'Error al cargar los datos. Por favor, intente nuevamente.'
         this.isLoading = false
       }
@@ -100,17 +92,7 @@ export class CreateDeliveryComponent implements OnInit {
         this.selectedProduct = this.products.find(p => p.id === numericId) || null
 
         if (this.selectedProduct) {
-          // Actualizar product_type automáticamente
-          this.deliveryForm.patchValue({
-            product_type: this.selectedProduct.type
-          }, { emitEvent: false })
-
-          // Establecer delivery_type basado en el tipo del producto
-          // maritime o terrestrial
           this.currentDeliveryType = this.selectedProduct.type === 'maritime' ? 'maritime' : 'terrestrial'
-
-          console.log('Producto seleccionado:', this.selectedProduct)
-          console.log('Tipo de entrega establecido:', this.currentDeliveryType)
         }
       } else {
         this.selectedProduct = null
@@ -162,7 +144,6 @@ export class CreateDeliveryComponent implements OnInit {
         const payload = JSON.parse(atob(token.split('.')[1]))
         return payload.user_id || payload.id || 6
       } catch (e) {
-        console.error('Error decodificando token:', e)
         return 6
       }
     }
@@ -175,8 +156,6 @@ export class CreateDeliveryComponent implements OnInit {
 
     if (this.deliveryForm.invalid) {
       this.error = 'Por favor, complete todos los campos requeridos correctamente.'
-      console.error('Formulario inválido:', this.deliveryForm.errors)
-      console.error('Campos con errores:', this.getFormValidationErrors())
       return
     }
 
@@ -207,17 +186,13 @@ export class CreateDeliveryComponent implements OnInit {
       destination_id: Number(formData.destination_id)
     }
 
-    console.log('Enviando solicitud de entrega:', deliveryRequest)
-
     this.deliveryService.createDelivery(deliveryRequest).subscribe({
       next: (response) => {
-        console.log('Entrega creada exitosamente:', response)
         this.isSubmitting = false
         // Redirigir después de crear exitosamente
         this.router.navigate(['/deliveries'])
       },
       error: (error) => {
-        console.error('Error creando entrega:', error)
         this.error = error.message || 'Error al crear la entrega. Por favor, intente nuevamente.'
         this.isSubmitting = false
       }
@@ -264,7 +239,13 @@ export class CreateDeliveryComponent implements OnInit {
         return `Máximo ${field.errors['maxLength'].requiredLength} caracteres`
       }
       if (field.errors['pattern']) {
-        return 'Solo se permiten letras y números (10 caracteres)'
+        if (fieldName === 'product_type') {
+          return 'Seleccione un tipo de producto válido'
+        }
+        if (fieldName === 'guide') {
+          return 'Solo se permiten letras y números (10 caracteres)'
+        }
+        return 'Formato inválido'
       }
       if (field.errors['invalidDate']) {
         return 'La fecha de entrega debe ser posterior a la fecha de registro'
