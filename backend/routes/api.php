@@ -23,5 +23,5 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
 // Logistics - Admin o Client con permiso
 Route::middleware(['auth:sanctum', 'permission:manage-deliveries'])->group(function () {
-    Route::prefix('logistics/delivery')->group(base_path('src/Logistics/Delivery/Infrastructure/Routes/api.php'));
+    Route::prefix('logistic/delivery')->group(base_path('src/Logistics/Delivery/Infrastructure/Routes/api.php'));
 });

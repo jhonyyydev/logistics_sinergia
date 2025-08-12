@@ -29,7 +29,6 @@ return new class extends Migration
             $table->date('delivery_date');
             $table->decimal('shipping_price', 10, 2);
             $table->decimal('final_price', 10, 2);
-            $table->decimal('discount', 5, 2)->default(0);
             $table->string('guide', 10)->unique();
             $table->string('delivery_type', 50);
             $table->timestamps();
@@ -56,10 +55,12 @@ return new class extends Migration
 
         // Transport Deliveries
         Schema::create('transport_deliveries', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('delivery_id')->constrained('deliveries')->cascadeOnDelete();
+            $table->unsignedBigInteger('delivery_id')->primary();
+            $table->foreign('delivery_id')->references('id')->on('deliveries')->cascadeOnDelete();
+
             $table->foreignId('transport_unit_id')->constrained('transport_units')->cascadeOnDelete();
             $table->foreignId('destination_id')->constrained('destinations')->cascadeOnDelete();
+
             $table->timestamps();
         });
     }
