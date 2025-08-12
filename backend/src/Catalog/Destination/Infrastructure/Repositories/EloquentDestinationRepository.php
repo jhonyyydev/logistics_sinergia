@@ -52,6 +52,11 @@ final class EloquentDestinationRepository implements DestinationRepositoryInterf
         EloquentDestination::destroy($id->value());
     }
 
+    public function findAllForSelect(): array
+    {
+        return \App\Models\Destination::select('id', 'name', 'destination_type')->get()->toArray();
+    }
+
     private function mapToDomain(EloquentDestination $model): DomainDestination
     {
         return new DomainDestination(

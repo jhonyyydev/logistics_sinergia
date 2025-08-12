@@ -11,5 +11,7 @@ interface ProductRepositoryInterface
     public function update(Product $product): void;
     public function findById(ProductId $id): ?Product;
     public function findAll(): array;
+    public function findAllForSelect(): array;
     public function delete(ProductId $id): void;
+
 }

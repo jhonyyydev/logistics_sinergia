@@ -6,11 +6,15 @@ use Src\Catalog\Destination\Infrastructure\Controllers\GetAllDestinationsGETCont
 use Src\Catalog\Destination\Infrastructure\Controllers\FindDestinationByIdGETController;
 use Src\Catalog\Destination\Infrastructure\Controllers\UpdateDestinationPUTController;
 use Src\Catalog\Destination\Infrastructure\Controllers\DeleteDestinationDELETEController;
+use Src\Catalog\Destination\Infrastructure\Controllers\GetDestinationsForSelectGETController;
 
+Route::middleware(['auth:sanctum', 'role:client|admin'])->group(function () {
+    Route::get('/select', GetDestinationsForSelectGETController::class);
+});
+
+// Rutas de admin
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-
     Route::get('/list', GetAllDestinationsGETController::class);
-
     Route::post('/', CreateDestinationPOSTController::class);
 
     Route::get('/{id}', FindDestinationByIdGETController::class)
@@ -22,3 +26,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::delete('/{id}', DeleteDestinationDELETEController::class)
         ->middleware('validate.destination.id');
 });
+
+
+
+
+

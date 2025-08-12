@@ -15,5 +15,7 @@ interface TransportUnitRepositoryInterface
 
     public function findAll(): array;
 
+    public function findAllForSelect(): array;
+
     public function deactivate(TransportUnitId $id): void;
 }

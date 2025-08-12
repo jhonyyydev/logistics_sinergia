@@ -13,12 +13,12 @@ Route::prefix('auth/role')->group(base_path('src/Auth/Role/Infrastructure/Routes
 Route::prefix('auth/user')->group(base_path('src/Auth/User/Infrastructure/Routes/api.php'));
 Route::prefix('auth/permission')->group(base_path('src/Auth/Permission/Infrastructure/Routes/api.php'));
 
-// Catalog - Solo admin
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+// Catalog - admin y client
+Route::middleware(['auth:sanctum', 'role:admin|client'])->group(function () {
     Route::prefix('catalog/client')->group(base_path('src/Catalog/Client/Infrastructure/Routes/api.php'));
     Route::prefix('catalog/destination')->group(base_path('src/Catalog/Destination/Infrastructure/Routes/api.php'));
     Route::prefix('catalog/product')->group(base_path('src/Catalog/Product/Infrastructure/Routes/api.php'));
-    Route::prefix('catalog/transport/')->group(base_path('src/Catalog/TransportUnit/Infrastructure/Routes/api.php'));
+    Route::prefix('catalog/transport')->group(base_path('src/Catalog/TransportUnit/Infrastructure/Routes/api.php'));
 });
 
 // Logistics - Admin o Client con permiso

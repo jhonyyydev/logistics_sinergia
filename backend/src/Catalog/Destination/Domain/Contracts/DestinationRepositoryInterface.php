@@ -11,5 +11,6 @@ interface DestinationRepositoryInterface
     public function update(Destination $destination): void;
     public function findById(DestinationId $id): ?Destination;
     public function findAll(): array;
+    public function findAllForSelect(): array;
     public function delete(DestinationId $id): void;
 }
