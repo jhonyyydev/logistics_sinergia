@@ -1,239 +1,243 @@
-<div class="create-delivery-container">
-  <div class="header">
-    <h1>Registrar Nueva Entrega</h1>
-    <p class="subtitle">Complete la información para registrar una nueva entrega</p>
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <div class="loading-spinner"></div>
-    <p>Cargando datos...</p>
-  </div>
-
-  <!-- Error State -->
-  <div *ngIf="error && !isLoading" class="error-container">
-    <div class="error-message">
-      <i class="error-icon">⚠️</i>
-      <span>{{ error }}</span>
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Registrar Nueva Entrega</h1>
+      <p class="text-lg text-gray-600">Complete la información para registrar una nueva entrega</p>
     </div>
-    <button type="button" class="retry-button" (click)="loadSelectData()">
-      Reintentar
-    </button>
-  </div>
 
-  <!-- Form -->
-  <form *ngIf="!isLoading && !error" [formGroup]="deliveryForm" (ngSubmit)="onSubmit()" class="delivery-form">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="bg-white rounded-lg shadow-sm border p-8 text-center">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+      <p class="text-gray-600 font-medium">Cargando datos...</p>
+    </div>
 
-    <!-- Información del Producto -->
-    <div class="form-section">
-      <h2>Información del Producto</h2>
+    <!-- Form -->
+    <form *ngIf="!isLoading" [formGroup]="deliveryForm" (ngSubmit)="onSubmit()" class="space-y-8">
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="product_id">Producto *</label>
-          <select
-            id="product_id"
-            formControlName="product_id"
-            class="form-control"
-            [class.error]="isFieldInvalid('product_id')">
-            <option value="">Seleccione un producto</option>
-            <option *ngFor="let product of products" [value]="product.id">
-              {{ product.name }} ({{ product.type === 'maritime' ? 'Marítimo' : 'Terrestre' }})
-            </option>
-          </select>
-          <div *ngIf="isFieldInvalid('product_id')" class="error-text">
-            {{ getFieldError('product_id') }}
+      <!-- Información del Producto -->
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">Información del Producto</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label for="product_id" class="block text-sm font-medium text-gray-700">Producto *</label>
+            <select
+              id="product_id"
+              formControlName="product_id"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              [class.border-red-500]="isFieldInvalid('product_id')"
+              [class.focus:ring-red-500]="isFieldInvalid('product_id')"
+              [class.focus:border-red-500]="isFieldInvalid('product_id')">
+              <option value="">Seleccione un producto</option>
+              <option *ngFor="let product of products" [value]="product.id">
+                {{ product.name }} ({{ product.type === 'maritime' ? 'Marítimo' : 'Terrestre' }})
+              </option>
+            </select>
+            <div *ngIf="isFieldInvalid('product_id')" class="text-sm text-red-600 mt-1">
+              {{ getFieldError('product_id') }}
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="product_type" class="block text-sm font-medium text-gray-700">Tipo de Producto *</label>
+            <select
+              id="product_type"
+              formControlName="product_type"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              [class.border-red-500]="isFieldInvalid('product_type')"
+              [class.focus:ring-red-500]="isFieldInvalid('product_type')"
+              [class.focus:border-red-500]="isFieldInvalid('product_type')">
+              <option value="">Seleccione el tipo</option>
+              <option *ngFor="let type of productTypes" [value]="type">
+                {{ productTypeLabels[type] }}
+              </option>
+            </select>
+            <div *ngIf="isFieldInvalid('product_type')" class="text-sm text-red-600 mt-1">
+              {{ getFieldError('product_type') }}
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="product_type">Tipo de Producto *</label>
-          <select
-            id="product_type"
-            formControlName="product_type"
-            class="form-control"
-            [class.error]="isFieldInvalid('product_type')">
-            <option value="">Seleccione el tipo</option>
-            <option *ngFor="let type of productTypes" [value]="type">
-              {{ productTypeLabels[type] }}
-            </option>
-          </select>
-          <div *ngIf="isFieldInvalid('product_type')" class="error-text">
-            {{ getFieldError('product_type') }}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div class="space-y-2">
+            <label for="quantity" class="block text-sm font-medium text-gray-700">Cantidad *</label>
+            <input
+              type="number"
+              id="quantity"
+              formControlName="quantity"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              [class.border-red-500]="isFieldInvalid('quantity')"
+              [class.focus:ring-red-500]="isFieldInvalid('quantity')"
+              [class.focus:border-red-500]="isFieldInvalid('quantity')"
+              min="1"
+              placeholder="Ingrese la cantidad">
+            <div *ngIf="isFieldInvalid('quantity')" class="text-sm text-red-600 mt-1">
+              {{ getFieldError('quantity') }}
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="shipping_price" class="block text-sm font-medium text-gray-700">Precio de Envío *</label>
+            <input
+              type="number"
+              id="shipping_price"
+              formControlName="shipping_price"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              [class.border-red-500]="isFieldInvalid('shipping_price')"
+              [class.focus:ring-red-500]="isFieldInvalid('shipping_price')"
+              [class.focus:border-red-500]="isFieldInvalid('shipping_price')"
+              min="0"
+              step="0.01"
+              placeholder="0.00">
+            <div *ngIf="isFieldInvalid('shipping_price')" class="text-sm text-red-600 mt-1">
+              {{ getFieldError('shipping_price') }}
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="quantity">Cantidad *</label>
-          <input
-            type="number"
-            id="quantity"
-            formControlName="quantity"
-            class="form-control"
-            [class.error]="isFieldInvalid('quantity')"
-            min="1"
-            placeholder="Ingrese la cantidad">
-          <div *ngIf="isFieldInvalid('quantity')" class="error-text">
-            {{ getFieldError('quantity') }}
+      <!-- Información de Fechas -->
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">Información de Fechas</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label for="log_date" class="block text-sm font-medium text-gray-700">Fecha de Registro *</label>
+            <input
+              type="date"
+              id="log_date"
+              formControlName="log_date"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              [class.border-red-500]="isFieldInvalid('log_date')"
+              [class.focus:ring-red-500]="isFieldInvalid('log_date')"
+              [class.focus:border-red-500]="isFieldInvalid('log_date')">
+            <div *ngIf="isFieldInvalid('log_date')" class="text-sm text-red-600 mt-1">
+              {{ getFieldError('log_date') }}
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="shipping_price">Precio de Envío *</label>
-          <input
-            type="number"
-            id="shipping_price"
-            formControlName="shipping_price"
-            class="form-control"
-            [class.error]="isFieldInvalid('shipping_price')"
-            min="0"
-            step="0.01"
-            placeholder="0.00">
-          <div *ngIf="isFieldInvalid('shipping_price')" class="error-text">
-            {{ getFieldError('shipping_price') }}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Información de Fechas -->
-    <div class="form-section">
-      <h2>Información de Fechas</h2>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="log_date">Fecha de Registro *</label>
-          <input
-            type="date"
-            id="log_date"
-            formControlName="log_date"
-            class="form-control"
-            [class.error]="isFieldInvalid('log_date')">
-          <div *ngIf="isFieldInvalid('log_date')" class="error-text">
-            {{ getFieldError('log_date') }}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="delivery_date">Fecha de Entrega *</label>
-          <input
-            type="date"
-            id="delivery_date"
-            formControlName="delivery_date"
-            class="form-control"
-            [class.error]="isFieldInvalid('delivery_date')">
-          <div *ngIf="isFieldInvalid('delivery_date')" class="error-text">
-            {{ getFieldError('delivery_date') }}
+          <div class="space-y-2">
+            <label for="delivery_date" class="block text-sm font-medium text-gray-700">Fecha de Entrega *</label>
+            <input
+              type="date"
+              id="delivery_date"
+              formControlName="delivery_date"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              [class.border-red-500]="isFieldInvalid('delivery_date')"
+              [class.focus:ring-red-500]="isFieldInvalid('delivery_date')"
+              [class.focus:border-red-500]="isFieldInvalid('delivery_date')">
+            <div *ngIf="isFieldInvalid('delivery_date')" class="text-sm text-red-600 mt-1">
+              {{ getFieldError('delivery_date') }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Información de Guía -->
-    <div class="form-section">
-      <h2>Información de Guía</h2>
+      <!-- Información de Guía -->
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">Información de Guía</h2>
 
-      <div class="form-group">
-        <label for="guide">Número de Guía *</label>
-        <input
-          type="text"
-          id="guide"
-          formControlName="guide"
-          class="form-control"
-          [class.error]="isFieldInvalid('guide')"
-          placeholder="ABC1234567"
-          maxlength="10"
-          style="text-transform: uppercase;">
-        <small class="form-hint">
-          Ingrese 10 caracteres alfanuméricos únicos
-        </small>
-        <div *ngIf="isFieldInvalid('guide')" class="error-text">
-          {{ getFieldError('guide') }}
+        <div class="space-y-2">
+          <label for="guide" class="block text-sm font-medium text-gray-700">Número de Guía *</label>
+          <input
+            type="text"
+            id="guide"
+            formControlName="guide"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+            [class.border-red-500]="isFieldInvalid('guide')"
+            [class.focus:ring-red-500]="isFieldInvalid('guide')"
+            [class.focus:border-red-500]="isFieldInvalid('guide')"
+            placeholder="ABC1234567"
+            maxlength="10"
+            style="text-transform: uppercase;">
+          <small class="text-sm text-gray-500 mt-1 block">
+            Ingrese 10 caracteres alfanuméricos únicos
+          </small>
+          <div *ngIf="isFieldInvalid('guide')" class="text-sm text-red-600 mt-1">
+            {{ getFieldError('guide') }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Información de Transporte y Destino -->
-    <div class="form-section">
-      <h2>Transporte y Destino</h2>
+      <!-- Información de Transporte y Destino -->
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">Transporte y Destino</h2>
 
-      <!-- Mostrar tipo de delivery automático -->
-      <div *ngIf="currentDeliveryType" class="delivery-type-info">
-        <p><strong>Tipo de Entrega:</strong>
-          <span class="delivery-type-badge" [class]="currentDeliveryType">
+        <!-- Mostrar tipo de delivery automático si hay producto seleccionado -->
+        <div *ngIf="currentDeliveryType" class="mb-6">
+          <p class="text-sm text-gray-700 mb-2"><strong>Tipo de Entrega:</strong></p>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                [class.bg-blue-100]="currentDeliveryType === 'maritime'"
+                [class.text-blue-800]="currentDeliveryType === 'maritime'"
+                [class.bg-green-100]="currentDeliveryType === 'terrestrial'"
+                [class.text-green-800]="currentDeliveryType === 'terrestrial'">
             {{ currentDeliveryType === 'maritime' ? 'Marítimo' : 'Terrestre' }}
           </span>
-        </p>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="transport_unit_id">Unidad de Transporte *</label>
-          <select
-            id="transport_unit_id"
-            formControlName="transport_unit_id"
-            class="form-control"
-            [class.error]="isFieldInvalid('transport_unit_id')"
-            [disabled]="!selectedProduct">
-            <option value="">
-              {{ selectedProduct ? 'Seleccione unidad de transporte' : 'Primero seleccione un producto' }}
-            </option>
-            <option *ngFor="let unit of filteredTransportUnits" [value]="unit.id">
-              {{ unit.identifier }} ({{ unit.unit_type === 'fleet' ? 'Flota' : 'Vehículo' }})
-            </option>
-          </select>
-          <div *ngIf="isFieldInvalid('transport_unit_id')" class="error-text">
-            {{ getFieldError('transport_unit_id') }}
-          </div>
         </div>
 
-        <div class="form-group">
-          <label for="destination_id">Destino *</label>
-          <select
-            id="destination_id"
-            formControlName="destination_id"
-            class="form-control"
-            [class.error]="isFieldInvalid('destination_id')"
-            [disabled]="!selectedProduct">
-            <option value="">
-              {{ selectedProduct ? 'Seleccione destino' : 'Primero seleccione un producto' }}
-            </option>
-            <option *ngFor="let destination of filteredDestinations" [value]="destination.id">
-              {{ destination.name }}
-              ({{ destination.destination_type === 'seaport' ? 'Puerto' : 'Almacén Terrestre' }})
-            </option>
-          </select>
-          <div *ngIf="isFieldInvalid('destination_id')" class="error-text">
-            {{ getFieldError('destination_id') }}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label for="transport_unit_id" class="block text-sm font-medium text-gray-700">Unidad de Transporte *</label>
+            <select
+              id="transport_unit_id"
+              formControlName="transport_unit_id"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              [class.border-red-500]="isFieldInvalid('transport_unit_id')"
+              [class.focus:ring-red-500]="isFieldInvalid('transport_unit_id')"
+              [class.focus:border-red-500]="isFieldInvalid('transport_unit_id')">
+              <option value="">Seleccione unidad de transporte</option>
+              <option *ngFor="let unit of transportUnits" [value]="unit.id">
+                {{ unit.identifier }} ({{ unit.unit_type === 'fleet' ? 'Flota' : 'Vehículo' }})
+              </option>
+            </select>
+            <div *ngIf="isFieldInvalid('transport_unit_id')" class="text-sm text-red-600 mt-1">
+              {{ getFieldError('transport_unit_id') }}
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="destination_id" class="block text-sm font-medium text-gray-700">Destino *</label>
+            <select
+              id="destination_id"
+              formControlName="destination_id"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              [class.border-red-500]="isFieldInvalid('destination_id')"
+              [class.focus:ring-red-500]="isFieldInvalid('destination_id')"
+              [class.focus:border-red-500]="isFieldInvalid('destination_id')">
+              <option value="">Seleccione destino</option>
+              <option *ngFor="let destination of destinations" [value]="destination.id">
+                {{ destination.name }}
+                ({{ destination.destination_type === 'seaport' ? 'Puerto' : 'Almacén Terrestre' }})
+              </option>
+            </select>
+            <div *ngIf="isFieldInvalid('destination_id')" class="text-sm text-red-600 mt-1">
+              {{ getFieldError('destination_id') }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Form Actions -->
-    <div class="form-actions">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="onCancel()"
-        [disabled]="isSubmitting">
-        Cancelar
-      </button>
+      <!-- Form Actions -->
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <div class="flex flex-col sm:flex-row gap-4 justify-end">
+          <button
+            type="button"
+            class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            (click)="onCancel()"
+            [disabled]="isSubmitting">
+            Cancelar
+          </button>
 
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="deliveryForm.invalid || isSubmitting">
-        <span *ngIf="isSubmitting" class="loading-spinner-small"></span>
-        {{ isSubmitting ? 'Registrando...' : 'Registrar Entrega' }}
-      </button>
-    </div>
-
-    <!-- Form Error -->
-    <div *ngIf="error && !isLoading" class="form-error">
-      {{ error }}
-    </div>
-  </form>
+          <button
+            type="submit"
+            class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            [disabled]="isSubmitting">
+            <span *ngIf="isSubmitting" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
+            {{ isSubmitting ? 'Registrando...' : 'Registrar Entrega' }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
