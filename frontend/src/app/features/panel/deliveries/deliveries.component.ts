@@ -213,14 +213,6 @@ export class DeliveriesComponent implements OnInit {
     return DELIVERY_TYPE_LABELS[type as keyof typeof DELIVERY_TYPE_LABELS] || type
   }
 
-  getDeliveryTypeIcon(type: string): string {
-    switch (type) {
-      case 'terrestrial': return '🚛'
-      case 'maritime': return '🚢'
-      case 'aerial': return '✈️'
-      default: return '📦'
-    }
-  }
 
   getDeliveryTypeStyle(type: string): string {
     switch (type) {
@@ -237,18 +229,6 @@ export class DeliveriesComponent implements OnInit {
 
   getProductTypeLabel(type: string): string {
     return PRODUCT_TYPE_LABELS[type as keyof typeof PRODUCT_TYPE_LABELS] || type
-  }
-
-  getProductTypeIcon(type: string): string {
-    switch (type) {
-      case 'electronics': return '💻'
-      case 'clothing': return '👕'
-      case 'food': return '🍕'
-      case 'furniture': return '🪑'
-      case 'books': return '📚'
-      case 'toys': return '🧸'
-      default: return '📦'
-    }
   }
 
   getProductTypeStyle(type: string): string {
@@ -394,24 +374,6 @@ export class DeliveriesComponent implements OnInit {
         return 'bg-blue-100 text-blue-800'
       default:
         return 'bg-gray-100 text-gray-800'
-    }
-  }
-
-  /**
-   * Obtener ícono para el estado de entrega
-   */
-  getDeliveryStatusIcon(delivery: Delivery): string {
-    const status = this.getDeliveryStatus(delivery)
-
-    switch (status) {
-      case 'completed':
-        return '✅'
-      case 'pending':
-        return '⏳'
-      case 'today':
-        return '🚀'
-      default:
-        return '📦'
     }
   }
 

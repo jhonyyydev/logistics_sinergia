@@ -1,4 +1,4 @@
-export type DeliveryType = 'terrestrial' | 'maritime' | 'aerial'
+export type DeliveryType = 'terrestrial' | 'maritime'
 export type ProductType = 'electronics' | 'clothing' | 'food' | 'furniture' | 'books' | 'toys'
 
 export interface DeliveryUser {
