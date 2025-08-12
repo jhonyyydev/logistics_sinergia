@@ -1,4 +1,3 @@
-// core/services/auth.service.ts
 import { Injectable, inject } from "@angular/core"
 import { HttpClient } from "@angular/common/http"
 import { BehaviorSubject, type Observable, tap } from "rxjs"
