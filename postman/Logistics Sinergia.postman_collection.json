@@ -78,7 +78,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"angel@example.com\",\n    \"password\": \"password123\"\n}\n",
+									"raw": "{\n    \"email\": \"jhonatan@example.com\",\n    \"password\": \"password123\"\n}\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -261,7 +261,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Puerto Callao\",\n    \"location\": \"Callao, Colombia\",\n    \"capacity\": 1220,\n    \"destination_type\": \"warehouse_land\"\n}",
+									"raw": "{\n    \"name\": \"Puerto Chocó\",\n    \"location\": \"Chocó, Colombia\",\n    \"capacity\": 2000,\n    \"destination_type\": \"seaport\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -306,6 +306,36 @@
 										"catalog",
 										"destination",
 										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SelectInfo",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/destination/select",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"destination",
+										"select"
 									]
 								}
 							},
@@ -581,6 +611,36 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "SelectInfo",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/product/select",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"product",
+										"select"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -650,6 +710,36 @@
 										"catalog",
 										"transport",
 										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Select Transport",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/transport/select",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"transport",
+										"select"
 									]
 								}
 							},

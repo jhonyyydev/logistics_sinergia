@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core'
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'
 import { CommonModule } from '@angular/common'
 import { Router } from '@angular/router'
-import { DeliveryService } from './services/create-delivery.service'
+import { CreateDeliveryService } from './services/create-delivery.service'
 import type {
   DeliveryCreateRequest,
   DeliveryFormData,
@@ -16,7 +16,7 @@ import {
   PRODUCT_TYPES,
   PRODUCT_TYPE_LABELS,
   DELIVERY_TYPE_LABELS
-} from '@/core/models/delivery.model'
+} from '@/core/models/delivery-form.model'
 
 @Component({
   selector: 'app-create-delivery',
@@ -26,7 +26,7 @@ import {
 })
 export class CreateDeliveryComponent implements OnInit {
   private fb = inject(FormBuilder)
-  private deliveryService = inject(DeliveryService)
+  private deliveryService = inject(CreateDeliveryService)
   private router = inject(Router)
 
   deliveryForm!: FormGroup
@@ -34,20 +34,16 @@ export class CreateDeliveryComponent implements OnInit {
   isSubmitting = false
   error: string | null = null
 
-  // Datos para los selects
+  // Datos para los selects - sin filtros
   products: ProductSelect[] = []
   transportUnits: TransportUnitSelect[] = []
   destinations: DestinationSelect[] = []
-
-  // Datos filtrados según la lógica de negocio
-  filteredTransportUnits: TransportUnitSelect[] = []
-  filteredDestinations: DestinationSelect[] = []
 
   // Opciones para product_type
   productTypes = Object.values(PRODUCT_TYPES)
   productTypeLabels = PRODUCT_TYPE_LABELS
 
-  // Producto seleccionado para determinar delivery_type
+  // Producto seleccionado
   selectedProduct: ProductSelect | null = null
   currentDeliveryType: DeliveryType | null = null
 
@@ -65,13 +61,18 @@ export class CreateDeliveryComponent implements OnInit {
       log_date: [this.getCurrentDate(), [Validators.required]],
       delivery_date: ['', [Validators.required]],
       shipping_price: [0, [Validators.required, Validators.min(0)]],
-      guide: ['', [Validators.required, Validators.pattern(/^[A-Z0-9]{10}$/)]],
+      guide: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10),
+        Validators.pattern(/^[A-Za-z0-9]{10}$/) // Acepta alfanuméricos
+      ]],
       transport_unit_id: [null, [Validators.required]],
       destination_id: [null, [Validators.required]]
     })
   }
 
-  public loadSelectData(): void {
+  loadSelectData(): void {
     this.isLoading = true
     this.error = null
 
@@ -82,63 +83,70 @@ export class CreateDeliveryComponent implements OnInit {
         this.destinations = data.destinations
         this.isLoading = false
       },
-      error: (error) => {
-        this.error = error.message
+      error: (err) => {
+        console.error('Error cargando datos:', err)
+        this.error = 'Error al cargar los datos. Por favor, intente nuevamente.'
         this.isLoading = false
       }
     })
   }
 
   private setupFormSubscriptions(): void {
-    // Suscripción para cambios en product_id
+    // Suscripción simplificada para cambios en product_id
     this.deliveryForm.get('product_id')?.valueChanges.subscribe(productId => {
-      this.onProductChange(productId)
+      if (productId) {
+        // Asegurar que el ID sea numérico para la comparación
+        const numericId = Number(productId)
+        this.selectedProduct = this.products.find(p => p.id === numericId) || null
+
+        if (this.selectedProduct) {
+          // Actualizar product_type automáticamente
+          this.deliveryForm.patchValue({
+            product_type: this.selectedProduct.type
+          }, { emitEvent: false })
+
+          // Establecer delivery_type basado en el tipo del producto
+          // maritime o terrestrial
+          this.currentDeliveryType = this.selectedProduct.type === 'maritime' ? 'maritime' : 'terrestrial'
+
+          console.log('Producto seleccionado:', this.selectedProduct)
+          console.log('Tipo de entrega establecido:', this.currentDeliveryType)
+        }
+      } else {
+        this.selectedProduct = null
+        this.currentDeliveryType = null
+      }
     })
 
-    // Validación de fecha de entrega mayor a fecha de registro
-    this.deliveryForm.get('delivery_date')?.valueChanges.subscribe(deliveryDate => {
-      this.validateDeliveryDate(deliveryDate)
+    // Validación de fecha de entrega
+    this.deliveryForm.get('delivery_date')?.valueChanges.subscribe(() => {
+      this.validateDates()
+    })
+
+    this.deliveryForm.get('log_date')?.valueChanges.subscribe(() => {
+      this.validateDates()
     })
   }
 
-  private onProductChange(productId: number): void {
-    this.selectedProduct = this.products.find(p => p.id === productId) || null
-
-    if (this.selectedProduct) {
-      // Establecer delivery_type basado en el tipo de producto
-      this.currentDeliveryType = this.selectedProduct.type
-
-      // Filtrar transport units y destinations basado en el tipo de producto
-      this.filterTransportUnitsAndDestinations(this.selectedProduct.type)
-
-      // Resetear selecciones de transport_unit y destination
-      this.deliveryForm.patchValue({
-        transport_unit_id: null,
-        destination_id: null
-      })
-    } else {
-      this.currentDeliveryType = null
-      this.filteredTransportUnits = []
-      this.filteredDestinations = []
-    }
-  }
-
-  private filterTransportUnitsAndDestinations(productType: DeliveryType): void {
-    if (productType === 'maritime') {
-      // Para productos marítimos: solo fleet y seaport
-      this.filteredTransportUnits = this.transportUnits.filter(tu => tu.unit_type === 'fleet')
-      this.filteredDestinations = this.destinations.filter(d => d.destination_type === 'seaport')
-    } else if (productType === 'terrestrial') {
-      // Para productos terrestres: solo vehicle y warehouse_land
-      this.filteredTransportUnits = this.transportUnits.filter(tu => tu.unit_type === 'vehicle')
-      this.filteredDestinations = this.destinations.filter(d => d.destination_type === 'warehouse_land')
-    }
-  }
-
-  private validateDeliveryDate(deliveryDate: string): void {
+  private validateDates(): void {
     const logDate = this.deliveryForm.get('log_date')?.value
-    if (logDate && deliveryDate && new Date(deliveryDate) <= new Date(logDate)) {
-      this.deliveryForm.get('delivery_date')?.setErrors({ invalidDate: true })
+    const deliveryDate = this.deliveryForm.get('delivery_date')?.value
+
+    if (logDate && deliveryDate) {
+      const log = new Date(logDate)
+      const delivery = new Date(deliveryDate)
+
+      if (delivery <= log) {
+        this.deliveryForm.get('delivery_date')?.setErrors({ invalidDate: true })
+      } else {
+        // Limpiar error si la fecha es válida
+        const errors = this.deliveryForm.get('delivery_date')?.errors
+        if (errors?.['invalidDate']) {
+          delete errors['invalidDate']
+          const hasErrors = Object.keys(errors).length > 0
+          this.deliveryForm.get('delivery_date')?.setErrors(hasErrors ? errors : null)
+        }
+      }
     }
   }
 
@@ -147,23 +155,33 @@ export class CreateDeliveryComponent implements OnInit {
   }
 
   private getUserIdFromToken(): number {
-    // Implementar lógica para obtener user_id del token
-    // Por ahora retorno un valor por defecto
+    // Por defecto retorna 6 si no hay token
     const token = localStorage.getItem('authToken')
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]))
         return payload.user_id || payload.id || 6
-      } catch {
-        return 6 // Valor por defecto
+      } catch (e) {
+        console.error('Error decodificando token:', e)
+        return 6
       }
     }
-    return 6 // Valor por defecto
+    return 6
   }
 
   onSubmit(): void {
-    if (this.deliveryForm.invalid || !this.currentDeliveryType) {
-      this.markFormGroupTouched()
+    // Marcar todos los campos como tocados para mostrar errores
+    this.markFormGroupTouched()
+
+    if (this.deliveryForm.invalid) {
+      this.error = 'Por favor, complete todos los campos requeridos correctamente.'
+      console.error('Formulario inválido:', this.deliveryForm.errors)
+      console.error('Campos con errores:', this.getFormValidationErrors())
+      return
+    }
+
+    if (!this.selectedProduct) {
+      this.error = 'Por favor, seleccione un producto válido.'
       return
     }
 
@@ -172,41 +190,58 @@ export class CreateDeliveryComponent implements OnInit {
 
     const formData: DeliveryFormData = this.deliveryForm.value
 
+    // Determinar el delivery_type basado en el producto
+    const deliveryType = this.selectedProduct.type === 'maritime' ? 'maritime' : 'terrestrial'
+
     const deliveryRequest: DeliveryCreateRequest = {
       user_id: this.getUserIdFromToken(),
-      product_id: formData.product_id,
-      product_type: formData.product_type,
-      quantity: formData.quantity,
+      product_id: Number(formData.product_id),
+      product_type: formData.product_type as ProductType,
+      quantity: Number(formData.quantity),
       log_date: formData.log_date,
       delivery_date: formData.delivery_date,
-      shipping_price: formData.shipping_price,
-      guide: formData.guide.toUpperCase(),
-      delivery_type: this.currentDeliveryType,
-      transport_unit_id: formData.transport_unit_id,
-      destination_id: formData.destination_id
+      shipping_price: Number(formData.shipping_price),
+      guide: String(formData.guide).toUpperCase(),
+      delivery_type: deliveryType,
+      transport_unit_id: Number(formData.transport_unit_id),
+      destination_id: Number(formData.destination_id)
     }
 
+    console.log('Enviando solicitud de entrega:', deliveryRequest)
+
     this.deliveryService.createDelivery(deliveryRequest).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('Entrega creada exitosamente:', response)
         this.isSubmitting = false
-        // Redirigir o mostrar mensaje de éxito
+        // Redirigir después de crear exitosamente
         this.router.navigate(['/deliveries'])
       },
       error: (error) => {
-        this.error = error.message
+        console.error('Error creando entrega:', error)
+        this.error = error.message || 'Error al crear la entrega. Por favor, intente nuevamente.'
         this.isSubmitting = false
       }
     })
   }
 
-  private markFormGroupTouched(): void {
+  private getFormValidationErrors(): any {
+    const errors: any = {}
     Object.keys(this.deliveryForm.controls).forEach(key => {
-      this.deliveryForm.get(key)?.markAsTouched()
+      const control = this.deliveryForm.get(key)
+      if (control && control.errors) {
+        errors[key] = control.errors
+      }
     })
+    return errors
   }
 
-  // Getters para facilitar el acceso en el template
-  get f() { return this.deliveryForm.controls }
+  private markFormGroupTouched(): void {
+    Object.keys(this.deliveryForm.controls).forEach(key => {
+      const control = this.deliveryForm.get(key)
+      control?.markAsTouched()
+      control?.updateValueAndValidity()
+    })
+  }
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.deliveryForm.get(fieldName)
@@ -215,17 +250,39 @@ export class CreateDeliveryComponent implements OnInit {
 
   getFieldError(fieldName: string): string {
     const field = this.deliveryForm.get(fieldName)
-    if (field && field.errors) {
-      if (field.errors['required']) return `${fieldName} es requerido`
-      if (field.errors['min']) return `Valor mínimo no válido`
-      if (field.errors['pattern']) return 'Formato inválido (10 caracteres alfanuméricos)'
-      if (field.errors['invalidDate']) return 'La fecha de entrega debe ser posterior a la fecha de registro'
+    if (field?.errors) {
+      if (field.errors['required']) {
+        return `Este campo es requerido`
+      }
+      if (field.errors['min']) {
+        return `El valor mínimo es ${field.errors['min'].min}`
+      }
+      if (field.errors['minLength']) {
+        return `Debe tener exactamente ${field.errors['minLength'].requiredLength} caracteres`
+      }
+      if (field.errors['maxLength']) {
+        return `Máximo ${field.errors['maxLength'].requiredLength} caracteres`
+      }
+      if (field.errors['pattern']) {
+        return 'Solo se permiten letras y números (10 caracteres)'
+      }
+      if (field.errors['invalidDate']) {
+        return 'La fecha de entrega debe ser posterior a la fecha de registro'
+      }
     }
     return ''
   }
 
   onCancel(): void {
+    if (this.isSubmitting) {
+      return // No permitir cancelar mientras se está enviando
+    }
     this.router.navigate(['/deliveries'])
   }
-}
 
+  onGuideInput(event: Event): void {
+    const input = event.target as HTMLInputElement
+    const value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '')
+    this.deliveryForm.patchValue({ guide: value }, { emitEvent: false })
+  }
+}

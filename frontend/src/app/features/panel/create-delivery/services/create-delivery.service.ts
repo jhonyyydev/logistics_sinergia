@@ -1,5 +1,3 @@
-// features/panel/deliveries/services/delivery.service.ts
-
 import { Injectable } from '@angular/core'
 import { Observable, throwError, forkJoin } from 'rxjs'
 import { catchError, map } from 'rxjs/operators'
@@ -29,10 +27,10 @@ export interface IDeliveryService {
 @Injectable({
   providedIn: 'root',
 })
-export class DeliveryService extends BaseApiService implements IDeliveryService {
+export class CreateDeliveryService extends BaseApiService implements IDeliveryService {
   private readonly ENDPOINTS = {
-    LIST: '/logistics/delivery',
-    CREATE: '/logistics/delivery',
+    LIST: '/logistic/delivery',
+    CREATE: '/logistic/delivery',
     PRODUCTS: '/catalog/product/select',
     TRANSPORT_UNITS: '/catalog/transport/select',
     DESTINATIONS: '/catalog/destination/select'
