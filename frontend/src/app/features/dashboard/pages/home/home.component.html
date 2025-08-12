@@ -1,0 +1,131 @@
+<div class="space-y-6">
+  <!-- Welcome Section -->
+  <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+            <span class="text-white font-bold text-lg">
+              {{ currentUser?.name?.charAt(0)?.toUpperCase() || 'U' }}
+            </span>
+          </div>
+        </div>
+        <div class="ml-4">
+          <h1 class="text-2xl font-bold text-gray-900">
+            Bienvenido, {{ currentUser?.name }}
+          </h1>
+          <p class="text-sm text-gray-500">
+            Rol: {{ currentUser?.roles?.join(', ') }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modules Grid -->
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div
+      *ngFor="let module of getAvailableModules()"
+      class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-200 cursor-pointer"
+      [routerLink]="module.route"
+    >
+      <div class="p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div [class]="module.color + ' w-10 h-10 rounded-lg flex items-center justify-center'">
+              <!-- Users Icon -->
+              <svg
+                *ngIf="module.icon === 'users'"
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+              </svg>
+              <!-- Package Icon -->
+              <svg
+                *ngIf="module.icon === 'package'"
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+              <!-- Map Pin Icon -->
+              <svg
+                *ngIf="module.icon === 'map-pin'"
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <!-- Truck Icon -->
+              <svg
+                *ngIf="module.icon === 'truck'"
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <!-- Clipboard Check Icon -->
+              <svg
+                *ngIf="module.icon === 'clipboard-check'"
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-lg font-medium text-gray-900">{{ module.name }}</h3>
+            <p class="text-sm text-gray-500">{{ module.description }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-6 py-3">
+        <div class="text-sm">
+          <span class="font-medium text-blue-600 hover:text-blue-500">
+            Acceder →
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stats (if admin) -->
+  <div *ngIf="currentUser?.roles?.includes('admin')" class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+        Estadísticas Rápidas
+      </h3>
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="bg-blue-50 overflow-hidden rounded-lg p-4">
+          <div class="text-2xl font-bold text-blue-600">--</div>
+          <div class="text-sm text-blue-800">Total Clientes</div>
+        </div>
+        <div class="bg-green-50 overflow-hidden rounded-lg p-4">
+          <div class="text-2xl font-bold text-green-600">--</div>
+          <div class="text-sm text-green-800">Total Productos</div>
+        </div>
+        <div class="bg-purple-50 overflow-hidden rounded-lg p-4">
+          <div class="text-2xl font-bold text-purple-600">--</div>
+          <div class="text-sm text-purple-800">Total Destinos</div>
+        </div>
+        <div class="bg-orange-50 overflow-hidden rounded-lg p-4">
+          <div class="text-2xl font-bold text-orange-600">--</div>
+          <div class="text-sm text-orange-800">Unidades Transporte</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

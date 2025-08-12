@@ -1,0 +1,135 @@
+<div class="max-w-2xl mx-auto">
+  <div class="bg-white shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <!-- Header -->
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">
+          {{ isEditMode ? 'Editar Producto' : 'Crear Producto' }}
+        </h1>
+        <p class="mt-1 text-sm text-gray-500">
+          {{ isEditMode ? 'Actualiza la información del producto' : 'Completa la información del nuevo producto' }}
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Name Field -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">
+            Nombre del Producto *
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            formControlName="name"
+            class="input-field mt-1"
+            [class.border-red-500]="getFieldError('name')"
+            placeholder="Ingresa el nombre del producto"
+          />
+          <p class="mt-1 text-sm text-red-600" *ngIf="getFieldError('name')">
+            {{ getFieldError('name') }}
+          </p>
+        </div>
+
+        <!-- Description Field -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700">
+            Descripción *
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            rows="3"
+            formControlName="description"
+            class="input-field mt-1"
+            [class.border-red-500]="getFieldError('description')"
+            placeholder="Describe el producto"
+          ></textarea>
+          <p class="mt-1 text-sm text-red-600" *ngIf="getFieldError('description')">
+            {{ getFieldError('description') }}
+          </p>
+        </div>
+
+        <!-- Type Field -->
+        <div>
+          <label for="type" class="block text-sm font-medium text-gray-700">
+            Tipo de Transporte *
+          </label>
+          <select
+            id="type"
+            name="type"
+            formControlName="type"
+            class="input-field mt-1"
+            [class.border-red-500]="getFieldError('type')"
+          >
+            <option value="maritime">Marítimo</option>
+            <option value="terrestrial">Terrestre</option>
+          </select>
+          <p class="mt-1 text-sm text-red-600" *ngIf="getFieldError('type')">
+            {{ getFieldError('type') }}
+          </p>
+        </div>
+
+        <!-- Date Creation Field -->
+        <div>
+          <label for="date_creation" class="block text-sm font-medium text-gray-700">
+            Fecha de Creación *
+          </label>
+          <input
+            id="date_creation"
+            name="date_creation"
+            type="date"
+            formControlName="date_creation"
+            class="input-field mt-1"
+            [class.border-red-500]="getFieldError('date_creation')"
+          />
+          <p class="mt-1 text-sm text-red-600" *ngIf="getFieldError('date_creation')">
+            {{ getFieldError('date_creation') }}
+          </p>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+          <button
+            type="button"
+            (click)="onCancel()"
+            class="btn-secondary"
+            [disabled]="isLoading"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn-primary flex items-center"
+            [disabled]="isLoading || productForm.invalid"
+            [class.opacity-50]="isLoading || productForm.invalid"
+          >
+            <svg
+              *ngIf="isLoading"
+              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            {{ isLoading ? 'Guardando...' : (isEditMode ? 'Actualizar' : 'Crear') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
