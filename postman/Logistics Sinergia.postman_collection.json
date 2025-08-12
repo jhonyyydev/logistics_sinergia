@@ -1,0 +1,840 @@
+{
+	"info": {
+		"_postman_id": "98161ab9-62dd-4c74-a652-c547bb14c329",
+		"name": "Logistics Sinergia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41527799"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "RegisterClient",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Angel Camilo Acosta\",\n  \"email\": \"angel@example.com\",\n  \"address\": \"123 Main Street\",\n  \"phone\": \"3442312233\",\n  \"type\": \"international\",\n  \"password\": \"password123\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/auth/user/register",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"auth",
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LoginUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.unset(\"auth_token\");",
+											"let jsonResponse = pm.response.json();",
+											"pm.environment.set(\"auth_token\", jsonResponse.token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"angel@example.com\",\n    \"password\": \"password123\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/auth/user/login",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"auth",
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Catalog",
+			"item": [
+				{
+					"name": "Client",
+					"item": [
+						{
+							"name": "FindAllClients",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/client/list",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"client",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindClientById",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/client/2",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"client",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateClient",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Angel Camilo Acosta\",\n    \"email\": \"angel@example.com\",\n    \"address\": \"Nueva dirección\",\n    \"phone\": \"555555555\",\n    \"type\": \"international\",\n    \"active\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/catalog/client/2",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"client",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeactivaClient",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/client/2",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"client",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Destination",
+					"item": [
+						{
+							"name": "CreateDestination",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Puerto Callao\",\n    \"location\": \"Callao, Colombia\",\n    \"capacity\": 1220,\n    \"destination_type\": \"warehouse_land\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/catalog/destination",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"destination"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindAllDestinations",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/destination/list",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"destination",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindDestinationById",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/destination/1",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"destination",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateDestination",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Puerto Colombia\",\n    \"location\": \"Buenaventura, Colombia\",\n    \"capacity\": 3400,\n    \"destination_type\": \"seaport\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/catalog/destination/1",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"destination",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteDestination",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/destination/1",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"destination",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Product",
+					"item": [
+						{
+							"name": "CreateProduct",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Producto de prueba\",\n    \"description\": \"Descripción del producto\",\n    \"type\": \"maritime\",\n    \"date_creation\": \"2025-08-09\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/catalog/product",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"product"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindAllProducts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/product/list",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"product",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindProductById",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/product/3",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"product",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateProduct",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Dispositivos Arduino\",\n    \"description\": \"Placa 43HLS23\",\n    \"type\": \"terrestrial\",\n    \"date_creation\": \"2025-08-09\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/catalog/product/3",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"product",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteProduct",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/product/3",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"product",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Transport Unit",
+					"item": [
+						{
+							"name": "CreateTransporUnit",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"identifier\": \"ABC1234Z\", \n    \"unit_type\": \"fleet\", \n    \"active\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/catalog/transport",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"transport"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindAllTransportUnits",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/transport/list",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"transport",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindTransportUnitById",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/transport/1",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"transport",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateTransportUnit",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"identifier\": \"ABD1234Z\", \n    \"unit_type\": \"fleet\", \n    \"active\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/catalog/transport/1",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"transport",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeactiveTransportUnit",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/catalog/transport/1",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"catalog",
+										"transport",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Logistics",
+			"item": [
+				{
+					"name": "Delivery",
+					"item": [
+						{
+							"name": "CreateDelivery",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": 6,\n    \"product_id\": 2,\n    \"product_type\": \"electronics\",\n    \"quantity\": 15,\n    \"log_date\": \"2025-08-11\",\n    \"delivery_date\": \"2025-08-15\",\n    \"shipping_price\": 100.00,\n    \"guide\": \"ABC1234567\",\n    \"delivery_type\": \"terrestrial\",\n    \"transport_unit_id\": 1,\n    \"destination_id\": 1\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server_url}}/logistic/delivery",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"logistic",
+										"delivery"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindAllDeliveries",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{server_url}}/logistic/delivery/list",
+									"host": [
+										"{{server_url}}"
+									],
+									"path": [
+										"logistic",
+										"delivery",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

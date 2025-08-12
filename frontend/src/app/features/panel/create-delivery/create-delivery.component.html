@@ -1,1 +1,239 @@
-<p>create-delivery works!</p>
+<div class="create-delivery-container">
+  <div class="header">
+    <h1>Registrar Nueva Entrega</h1>
+    <p class="subtitle">Complete la información para registrar una nueva entrega</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Cargando datos...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <div class="error-message">
+      <i class="error-icon">⚠️</i>
+      <span>{{ error }}</span>
+    </div>
+    <button type="button" class="retry-button" (click)="loadSelectData()">
+      Reintentar
+    </button>
+  </div>
+
+  <!-- Form -->
+  <form *ngIf="!isLoading && !error" [formGroup]="deliveryForm" (ngSubmit)="onSubmit()" class="delivery-form">
+
+    <!-- Información del Producto -->
+    <div class="form-section">
+      <h2>Información del Producto</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="product_id">Producto *</label>
+          <select
+            id="product_id"
+            formControlName="product_id"
+            class="form-control"
+            [class.error]="isFieldInvalid('product_id')">
+            <option value="">Seleccione un producto</option>
+            <option *ngFor="let product of products" [value]="product.id">
+              {{ product.name }} ({{ product.type === 'maritime' ? 'Marítimo' : 'Terrestre' }})
+            </option>
+          </select>
+          <div *ngIf="isFieldInvalid('product_id')" class="error-text">
+            {{ getFieldError('product_id') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="product_type">Tipo de Producto *</label>
+          <select
+            id="product_type"
+            formControlName="product_type"
+            class="form-control"
+            [class.error]="isFieldInvalid('product_type')">
+            <option value="">Seleccione el tipo</option>
+            <option *ngFor="let type of productTypes" [value]="type">
+              {{ productTypeLabels[type] }}
+            </option>
+          </select>
+          <div *ngIf="isFieldInvalid('product_type')" class="error-text">
+            {{ getFieldError('product_type') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="quantity">Cantidad *</label>
+          <input
+            type="number"
+            id="quantity"
+            formControlName="quantity"
+            class="form-control"
+            [class.error]="isFieldInvalid('quantity')"
+            min="1"
+            placeholder="Ingrese la cantidad">
+          <div *ngIf="isFieldInvalid('quantity')" class="error-text">
+            {{ getFieldError('quantity') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="shipping_price">Precio de Envío *</label>
+          <input
+            type="number"
+            id="shipping_price"
+            formControlName="shipping_price"
+            class="form-control"
+            [class.error]="isFieldInvalid('shipping_price')"
+            min="0"
+            step="0.01"
+            placeholder="0.00">
+          <div *ngIf="isFieldInvalid('shipping_price')" class="error-text">
+            {{ getFieldError('shipping_price') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información de Fechas -->
+    <div class="form-section">
+      <h2>Información de Fechas</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="log_date">Fecha de Registro *</label>
+          <input
+            type="date"
+            id="log_date"
+            formControlName="log_date"
+            class="form-control"
+            [class.error]="isFieldInvalid('log_date')">
+          <div *ngIf="isFieldInvalid('log_date')" class="error-text">
+            {{ getFieldError('log_date') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="delivery_date">Fecha de Entrega *</label>
+          <input
+            type="date"
+            id="delivery_date"
+            formControlName="delivery_date"
+            class="form-control"
+            [class.error]="isFieldInvalid('delivery_date')">
+          <div *ngIf="isFieldInvalid('delivery_date')" class="error-text">
+            {{ getFieldError('delivery_date') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información de Guía -->
+    <div class="form-section">
+      <h2>Información de Guía</h2>
+
+      <div class="form-group">
+        <label for="guide">Número de Guía *</label>
+        <input
+          type="text"
+          id="guide"
+          formControlName="guide"
+          class="form-control"
+          [class.error]="isFieldInvalid('guide')"
+          placeholder="ABC1234567"
+          maxlength="10"
+          style="text-transform: uppercase;">
+        <small class="form-hint">
+          Ingrese 10 caracteres alfanuméricos únicos
+        </small>
+        <div *ngIf="isFieldInvalid('guide')" class="error-text">
+          {{ getFieldError('guide') }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Información de Transporte y Destino -->
+    <div class="form-section">
+      <h2>Transporte y Destino</h2>
+
+      <!-- Mostrar tipo de delivery automático -->
+      <div *ngIf="currentDeliveryType" class="delivery-type-info">
+        <p><strong>Tipo de Entrega:</strong>
+          <span class="delivery-type-badge" [class]="currentDeliveryType">
+            {{ currentDeliveryType === 'maritime' ? 'Marítimo' : 'Terrestre' }}
+          </span>
+        </p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="transport_unit_id">Unidad de Transporte *</label>
+          <select
+            id="transport_unit_id"
+            formControlName="transport_unit_id"
+            class="form-control"
+            [class.error]="isFieldInvalid('transport_unit_id')"
+            [disabled]="!selectedProduct">
+            <option value="">
+              {{ selectedProduct ? 'Seleccione unidad de transporte' : 'Primero seleccione un producto' }}
+            </option>
+            <option *ngFor="let unit of filteredTransportUnits" [value]="unit.id">
+              {{ unit.identifier }} ({{ unit.unit_type === 'fleet' ? 'Flota' : 'Vehículo' }})
+            </option>
+          </select>
+          <div *ngIf="isFieldInvalid('transport_unit_id')" class="error-text">
+            {{ getFieldError('transport_unit_id') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="destination_id">Destino *</label>
+          <select
+            id="destination_id"
+            formControlName="destination_id"
+            class="form-control"
+            [class.error]="isFieldInvalid('destination_id')"
+            [disabled]="!selectedProduct">
+            <option value="">
+              {{ selectedProduct ? 'Seleccione destino' : 'Primero seleccione un producto' }}
+            </option>
+            <option *ngFor="let destination of filteredDestinations" [value]="destination.id">
+              {{ destination.name }}
+              ({{ destination.destination_type === 'seaport' ? 'Puerto' : 'Almacén Terrestre' }})
+            </option>
+          </select>
+          <div *ngIf="isFieldInvalid('destination_id')" class="error-text">
+            {{ getFieldError('destination_id') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="onCancel()"
+        [disabled]="isSubmitting">
+        Cancelar
+      </button>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="deliveryForm.invalid || isSubmitting">
+        <span *ngIf="isSubmitting" class="loading-spinner-small"></span>
+        {{ isSubmitting ? 'Registrando...' : 'Registrar Entrega' }}
+      </button>
+    </div>
+
+    <!-- Form Error -->
+    <div *ngIf="error && !isLoading" class="form-error">
+      {{ error }}
+    </div>
+  </form>
+</div>

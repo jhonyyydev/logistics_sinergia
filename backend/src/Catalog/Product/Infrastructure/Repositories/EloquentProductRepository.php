@@ -62,4 +62,9 @@ final class EloquentProductRepository implements ProductRepositoryInterface
             new ProductDateCreation($model->date_creation)
         );
     }
+
+    public function findAllForSelect(): array
+    {
+        return \App\Models\Product::select('id', 'name', 'type')->get()->toArray();
+    }
 }

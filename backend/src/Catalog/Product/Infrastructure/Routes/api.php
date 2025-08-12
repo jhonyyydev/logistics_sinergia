@@ -6,6 +6,11 @@ use Src\Catalog\Product\Infrastructure\Controllers\GetAllProductsGETController;
 use Src\Catalog\Product\Infrastructure\Controllers\FindProductByIdGETController;
 use Src\Catalog\Product\Infrastructure\Controllers\UpdateProductPUTController;
 use Src\Catalog\Product\Infrastructure\Controllers\DeleteProductDELETEController;
+use Src\Catalog\Product\Infrastructure\Controllers\GetProductsForSelectGETController;
+
+Route::middleware(['auth:sanctum', 'role:client|admin'])->group(function () {
+    Route::get('/select', GetProductsForSelectGETController::class);
+});
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 

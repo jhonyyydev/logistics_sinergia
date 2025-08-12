@@ -6,6 +6,11 @@ use Src\Catalog\TransportUnit\Infrastructure\Controllers\GetAllTransportUnitsGET
 use Src\Catalog\TransportUnit\Infrastructure\Controllers\FindTransportUnitByIdGETController;
 use Src\Catalog\TransportUnit\Infrastructure\Controllers\UpdateTransportUnitPUTController;
 use Src\Catalog\TransportUnit\Infrastructure\Controllers\DeactivateTransportUnitDELETEController;
+use Src\Catalog\TransportUnit\Infrastructure\Controllers\GetTransportUnitsForSelectGETController;
+
+Route::middleware(['auth:sanctum', 'role:client|admin'])->group(function () {
+    Route::get('/select', GetTransportUnitsForSelectGETController::class);
+});
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
@@ -22,3 +27,4 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::delete('/{id}', DeactivateTransportUnitDELETEController::class)
         ->middleware('validate.transport.id');
 });
+

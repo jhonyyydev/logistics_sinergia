@@ -54,6 +54,12 @@ final class EloquentTransportUnitRepository implements TransportUnitRepositoryIn
         }
     }
 
+    public function findAllForSelect(): array
+    {
+        return \App\Models\TransportUnit::select('id', 'unit_type', 'identifier')->get()->toArray();
+    }
+
+
     private function mapToDomain(EloquentTransportUnit $model): DomainTransportUnit
     {
         return new DomainTransportUnit(
