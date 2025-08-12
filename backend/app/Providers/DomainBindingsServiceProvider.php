@@ -31,7 +31,13 @@ use Src\Shared\Domain\Contracts\ProductIdGeneratorInterface;
 
 use Src\Catalog\TransportUnit\Domain\Contracts\TransportUnitRepositoryInterface;
 use Src\Catalog\TransportUnit\Infrastructure\Repositories\EloquentTransportUnitRepository;
+use Src\Logistics\Delivery\Domain\Contracts\DeliveryRepositoryInterface;
+use Src\Logistics\Delivery\Domain\Contracts\TransportDeliveryRepositoryInterface;
+use Src\Logistics\Delivery\Infrastructure\Repositories\EloquentDeliveryRepository;
+use Src\Logistics\Delivery\Infrastructure\Repositories\EloquentTransportDeliveryRepository;
+use Src\Shared\Domain\Contracts\DeliveryIdGeneratorInterface;
 use Src\Shared\Domain\Contracts\TransportUnitIdGeneratorInterface;
+use Src\Shared\Infrastructure\SequentialDeliveryIdGenerator;
 
 class DomainBindingsServiceProvider extends ServiceProvider
 {
@@ -41,6 +47,7 @@ class DomainBindingsServiceProvider extends ServiceProvider
         $this->app->bind(RoleRepositoryInterface::class, SpatieRoleRepository::class);
         $this->app->bind(IdGeneratorInterface::class, SequentialIdGenerator::class);
         $this->app->bind(DestinationIdGeneratorInterface::class, SequentialDestinationIdGenerator::class);
+        $this->app->bind(DeliveryIdGeneratorInterface::class, SequentialDeliveryIdGenerator::class);
         $this->app->bind(ProductIdGeneratorInterface::class, SequentialProductIdGenerator::class);
         $this->app->bind(TransportUnitIdGeneratorInterface::class, SequentialTransportUnitIdGenerator::class);
         $this->app->bind(PasswordHasherInterface::class, LaravelPasswordHasher::class);
@@ -68,6 +75,16 @@ class DomainBindingsServiceProvider extends ServiceProvider
         $this->app->bind(
             TransportUnitRepositoryInterface::class,
             EloquentTransportUnitRepository::class
+        );
+
+        // Delivery bindings
+        $this->app->bind(
+            DeliveryRepositoryInterface::class,
+            EloquentDeliveryRepository::class
+        );
+        $this->app->bind(
+            TransportDeliveryRepositoryInterface::class,
+            EloquentTransportDeliveryRepository::class
         );
     }
 

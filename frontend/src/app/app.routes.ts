@@ -14,6 +14,8 @@ import { ProductListComponent } from "./features/panel/products/product-list/pro
 import { DestinationListComponent } from "./features/panel/destinations//destination-list/destination-list.component"
 import { TransportListComponent } from "./features/panel/transports/transport-list/transport-list.component"
 import { DeliveriesComponent } from "./features/panel/deliveries/deliveries.component"
+import { RoleGuard } from "./core/guards/role.guard"
+import { CreateDeliveryComponent } from "./features/panel/create-delivery/create-delivery.component"
 
 export const routes: Routes = [
   // Ruta raíz - redirige a panel
@@ -53,29 +55,47 @@ export const routes: Routes = [
       // Página principal del panel
       {
         path: "home",
-        component: HomeComponent
+        component: HomeComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'client'] }
       },
 
       // Módulos del panel
       {
         path: "client",
-        component: ClientListComponent
+        component: ClientListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] }
       },
       {
         path: "product",
-        component: ProductListComponent
+        component: ProductListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] }
       },
       {
         path: "destination",
-        component: DestinationListComponent
+        component: DestinationListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] }
       },
       {
         path: "transport",
-        component: TransportListComponent
+        component: TransportListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] }
       },
       {
         path: "delivery",
-        component: DeliveriesComponent
+        component: DeliveriesComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] }
+      },
+      {
+        path: "create-delivery",
+        component: CreateDeliveryComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['client'] }
       }
     ]
   },
