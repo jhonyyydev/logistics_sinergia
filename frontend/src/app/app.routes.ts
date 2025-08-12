@@ -9,7 +9,7 @@ import { PanelComponent } from "./features/panel/panel.component"
 import { HomeComponent } from "./features/panel/home/home.component"
 
 // Feature Components
-import { ClientsComponent } from "./features/panel/clients/clients.component"
+import { ClientListComponent } from "./features/panel/clients/client-list/client-list.component"
 import { ProductListComponent } from "./features/panel/products/product-list/product-list.component"
 import { DestinationListComponent } from "./features/panel/destinations//destination-list/destination-list.component"
 import { TransportListComponent } from "./features/panel/transports/transport-list/transport-list.component"
@@ -59,7 +59,7 @@ export const routes: Routes = [
       // Módulos del panel
       {
         path: "client",
-        component: ClientsComponent
+        component: ClientListComponent
       },
       {
         path: "product",
