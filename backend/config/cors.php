@@ -21,7 +21,7 @@ return [
 
     'allowed_origins' => [
         'http://localhost:4200',  // Develop mode
-        // 'domain.vercel.app' // Dominio de producción
+        'https://logistics-sinergia.vercel.app/' // Dominio de producción
     ],
 
     'allowed_origins_patterns' => [],
