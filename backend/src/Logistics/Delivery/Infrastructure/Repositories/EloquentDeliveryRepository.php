@@ -86,6 +86,7 @@ final class EloquentDeliveryRepository implements DeliveryRepositoryInterface
     public function findAllWithRelations(): array
     {
         return EloquentDelivery::with([
+            'user', // relación con el cliente
             'transportDelivery.transportUnit',
             'transportDelivery.destination'
         ])
@@ -93,7 +94,11 @@ final class EloquentDeliveryRepository implements DeliveryRepositoryInterface
         ->map(function ($model) {
             return [
                 'id'             => $model->id,
-                'user_id'        => $model->user_id,
+                'user'           => [
+                    'id'    => $model->user?->id,
+                    'name'  => $model->user?->name,
+                    'email' => $model->user?->email,
+                ],
                 'product_id'     => $model->product_id,
                 'product_type'   => $model->product_type,
                 'quantity'       => $model->quantity,
@@ -104,7 +109,7 @@ final class EloquentDeliveryRepository implements DeliveryRepositoryInterface
                 'guide'          => $model->guide,
                 'delivery_type'  => $model->delivery_type,
                 'transport_unit' => [
-                    'id'       => $model->transportDelivery?->transportUnit?->id,
+                    'id'         => $model->transportDelivery?->transportUnit?->id,
                     'identifier' => $model->transportDelivery?->transportUnit?->identifier,
                 ],
                 'destination'    => [
@@ -116,5 +121,6 @@ final class EloquentDeliveryRepository implements DeliveryRepositoryInterface
         })
         ->toArray();
     }
+
 
 }
