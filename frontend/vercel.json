@@ -1,6 +1,4 @@
 {
-  "buildCommand": "ng build",
-  "outputDirectory": "dist/frontend",
   "routes": [
     {
       "src": "/assets/(.*)",
