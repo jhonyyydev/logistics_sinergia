@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ToastContainerComponent } from './shared/components/toast/toast-container.component';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,
-    ToastContainerComponent
-  ],
+  standalone: true,
+  imports: [RouterOutlet,],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ["./app.component.scss"],
 })
-export class AppComponent {
-  title = 'frontend';
+export class AppComponent implements OnInit {
+  constructor(private router: Router) {}
+    ngOnInit(): void {
+  }
 }

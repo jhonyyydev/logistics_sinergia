@@ -1,28 +1,88 @@
 import type { Routes } from "@angular/router"
-import { AuthGuard } from "./core/guards/auth.guard"
-import { inject } from "@angular/core"
-import { Router } from "@angular/router"
-import { AuthService } from "./core/services/auth.service"
+
+// Auth Components
+import { LoginComponent } from "./features/auth/login/login.component"
+import { RegisterComponent } from "./features/auth/register/register.component"
+
+// Dashboard Components
+import { PanelComponent } from "./features/panel/panel.component"
+import { HomeComponent } from "./features/panel/home/home.component"
+
+// Feature Components
+import { ClientsComponent } from "./features/panel/clients/clients.component"
+import { ProductListComponent } from "./features/panel/products/product-list/product-list.component"
+import { DestinationListComponent } from "./features/panel/destinations//destination-list/destination-list.component"
+import { TransportListComponent } from "./features/panel/transports/transport-list/transport-list.component"
+import { DeliveriesComponent } from "./features/panel/deliveries/deliveries.component"
 
 export const routes: Routes = [
+  // Ruta raíz - redirige a panel
   {
     path: "",
-    pathMatch: "full",
-    redirectTo: "auth/dashboard",
+    redirectTo: "/panel",
+    pathMatch: "full"
   },
+
+  // Rutas de autenticación
   {
     path: "auth",
-    loadChildren: () =>
-      import("./features/auth/presentation/auth.routes").then((m) => m.AUTH_ROUTES),
+    children: [
+      {
+        path: "login",
+        component: LoginComponent
+      },
+      {
+        path: "register",
+        component: RegisterComponent
+      }
+    ]
   },
+
+  // Panel principal con DashboardComponent como wrapper
   {
-    path: "dashboard",
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import("./features/dashboard/presentation/dashboard/dashboard.routes").then((m) => m.dashboardRoutes),
+    path: "panel",
+    component: PanelComponent,
+    children: [
+      // Redirect automático de /panel a /panel/home
+      {
+        path: "",
+        redirectTo: "home",
+        pathMatch: "full"
+      },
+
+      // Página principal del panel
+      {
+        path: "home",
+        component: HomeComponent
+      },
+
+      // Módulos del panel
+      {
+        path: "client",
+        component: ClientsComponent
+      },
+      {
+        path: "product",
+        component: ProductListComponent
+      },
+      {
+        path: "destination",
+        component: DestinationListComponent
+      },
+      {
+        path: "transport",
+        component: TransportListComponent
+      },
+      {
+        path: "delivery",
+        component: DeliveriesComponent
+      }
+    ]
   },
+
+  // Wildcard - redirige a panel si no encuentra la ruta
   {
     path: "**",
-    redirectTo: "/dashboard",
-  },
+    redirectTo: "/panel"
+  }
 ]
